@@ -4,16 +4,8 @@ from django.views.decorators.http import require_POST
 from django.urls import reverse
 from django.utils import timezone
 from .models import Quiz, Question, AnswerOption, QuizResult, UserQuiz, UserResponse
+from .utils import get_client_ip, conditional_csrf_exempt
 import json
-
-def get_client_ip(request):
-    """Helper function to get the client's IP address."""
-    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
-    if x_forwarded_for:
-        ip = x_forwarded_for.split(',')[0]
-    else:
-        ip = request.META.get('REMOTE_ADDR')
-    return ip
 
 def home(request):
     """
@@ -22,6 +14,7 @@ def home(request):
     quizzes = Quiz.objects.all()
     return render(request, 'home.html', {'quizzes': quizzes})
 
+@conditional_csrf_exempt
 def quiz_start(request, quiz_id):
     """
     Display form to collect user name before starting the quiz.
@@ -49,6 +42,7 @@ def quiz_start(request, quiz_id):
     
     return render(request, 'app/quiz_start.html', {'quiz': quiz})
 
+@conditional_csrf_exempt
 def quiz_question(request, token):
     """
     Display a single question from the quiz and handle responses.
@@ -119,63 +113,77 @@ def quiz_question(request, token):
     # Check if this question has already been answered
     existing_response = UserResponse.objects.filter(user_quiz=user_quiz, question=current_question).first()
     
+    # Get total questions for progress calculation
+    total_questions = user_quiz.quiz.questions.count()
+    progress = int(((user_quiz.current_question - 1) / total_questions) * 100)
+    
     return render(request, 'app/quiz_question.html', {
         'user_quiz': user_quiz,
         'question': current_question,
         'existing_response': existing_response,
-        'total_questions': user_quiz.quiz.questions.count(),
-        'progress': user_quiz.progress_percentage
+        'total_questions': total_questions,
+        'progress': progress
     })
 
 def calculate_results(user_quiz):
     """
     Calculate quiz results based on user responses.
     """
-    scores = {
-        "Hospitality": 0,
-        "Teaching": 0,
-        "Leadership": 0,
-        "Counsel/Wisdom": 0,
-        "Service": 0
-    }
+    # Initialize an empty dictionary to hold scores for each category
+    scores = {}
     
-    # Add up the scores from all answered questions
-    responses = UserResponse.objects.filter(
-        user_quiz=user_quiz, 
-        is_skipped=False
-    ).select_related('selected_option')
+    # Get all responses for this user quiz
+    responses = UserResponse.objects.filter(user_quiz=user_quiz, is_skipped=False)
     
+    # Loop through responses and calculate scores for each category
     for response in responses:
         if response.selected_option:
-            for category, points in response.selected_option.mapping.items():
-                scores[category] = scores.get(category, 0) + points
+            # Get the mapping from the selected option (e.g., {"Leadership": 2, "Teaching": 1})
+            mapping = response.selected_option.mapping
+            
+            # Add scores to the appropriate categories
+            for category, points in mapping.items():
+                if category in scores:
+                    scores[category] += points
+                else:
+                    scores[category] = points
     
-    # Determine primary gift and secondary gifts
-    if scores:
-        primary_category = max(scores.items(), key=lambda x: x[1])
-        
-        # Find secondary gifts (within 15% of primary)
-        primary_score = primary_category[1]
-        secondary_gifts = []
-        
-        for category, score in scores.items():
-            if category != primary_category[0] and score >= (primary_score * 0.85):
-                secondary_gifts.append((category, score))
-        
-        # Store the result data
-        user_quiz.result_data = {
-            'scores': scores,
-            'primary_category': primary_category[0],
-            'primary_score': primary_category[1],
-            'secondary_gifts': [{
-                'category': cat, 
-                'score': score
-            } for cat, score in secondary_gifts]
-        }
-    else:
-        user_quiz.result_data = {'scores': {}}
+    # Find the primary category (highest score)
+    primary_category = None
+    max_score = 0
     
+    for category, score in scores.items():
+        if score > max_score:
+            max_score = score
+            primary_category = category
+    
+    # Find secondary gifts (next highest scores)
+    secondary_gifts = []
+    
+    # Convert scores to a list of tuples for sorting
+    sorted_scores = sorted(scores.items(), key=lambda x: x[1], reverse=True)
+    
+    # Get up to 2 secondary gifts (skip the primary one)
+    for i, (category, score) in enumerate(sorted_scores):
+        if i == 0:  # Skip the primary gift
+            continue
+        if i <= 2:  # Get the next two highest scores
+            secondary_gifts.append({'category': category, 'score': score})
+        else:
+            break
+    
+    # Store results in user_quiz
+    result_data = {
+        'scores': scores,
+        'primary_category': primary_category,
+        'primary_score': max_score if primary_category else 0,
+        'secondary_gifts': secondary_gifts
+    }
+    
+    user_quiz.result_data = result_data
     user_quiz.save()
+    
+    return result_data
 
 def quiz_result(request, token):
     """

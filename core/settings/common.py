@@ -34,6 +34,20 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+# CSRF settings
+CSRF_TRUSTED_ORIGINS = [
+    'http://localhost:8000',
+    'http://127.0.0.1:8000',
+    'https://talent-quiz.rcfd.in',
+    'http://talent-quiz.rcfd.in',
+]
+
+# Allow CSRF cookies to be used across subdomains
+CSRF_COOKIE_DOMAIN = None  # Set to main domain like '.rcfd.in' if needed
+CSRF_USE_SESSIONS = False  # Store CSRF token in session instead of cookie (False is default)
+CSRF_COOKIE_HTTPONLY = False  # False allows JavaScript to access the cookie
+CSRF_COOKIE_SAMESITE = 'Lax'  # 'Lax' allows CSRF cookies in cross-site requests
+
 ROOT_URLCONF = 'core.urls'
 
 TEMPLATES = [

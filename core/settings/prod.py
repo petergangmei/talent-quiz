@@ -36,7 +36,19 @@ DATABASES = {
 # SECURE_HSTS_PRELOAD = True
 # SECURE_SSL_REDIRECT = True
 # SESSION_COOKIE_SECURE = True
-# CSRF_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True  # Use secure cookies in production
+
+# Get trusted origins from environment variable or use default
+csrf_trusted_origins = os.environ.get('CSRF_TRUSTED_ORIGINS', '')
+if csrf_trusted_origins:
+    CSRF_TRUSTED_ORIGINS = [origin.strip() for origin in csrf_trusted_origins.split(',') if origin.strip()]
+else:
+    # Default trusted origins for production
+    CSRF_TRUSTED_ORIGINS = [
+        'https://talent-quiz.rcfd.in',
+        'http://talent-quiz.rcfd.in',
+    ]
+
 # SECURE_BROWSER_XSS_FILTER = True
 # SECURE_CONTENT_TYPE_NOSNIFF = True
 # X_FRAME_OPTIONS = 'DENY'
