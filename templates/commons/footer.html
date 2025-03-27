@@ -1,0 +1,30 @@
+<!-- Footer Template -->
+<footer class="site-footer mt-5 py-4 bg-light">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <h5>Quiz App</h5>
+                <p>Test your knowledge with our interactive quizzes.</p>
+            </div>
+            <div class="col-md-3">
+                <h5>Quick Links</h5>
+                <ul class="list-unstyled">
+                    <li><a href="{% url 'home' %}">Home</a></li>
+                    <!-- Add more links as needed -->
+                </ul>
+            </div>
+            <div class="col-md-3">
+                <h5>Contact</h5>
+                <address>
+                    <p>Email: contact@example.com</p>
+                    <p>Phone: (123) 456-7890</p>
+                </address>
+            </div>
+        </div>
+        <div class="row mt-3">
+            <div class="col text-center">
+                <p>&copy; {% now "Y" %} Quiz App. All rights reserved.</p>
+            </div>
+        </div>
+    </div>
+</footer> 
