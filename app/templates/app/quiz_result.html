@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load quiz_extras %}
 
 {% block title %}Results: {{ quiz.title }} | Quiz App{% endblock %}
 
@@ -14,20 +15,28 @@
                     <h1 class="h2 mb-0">Your Results: {{ quiz.title }}</h1>
                 </div>
                 <div class="card-body">
-                    {% if primary_category %}
+                    {% if result_data.primary_category %}
                         <div class="text-center mb-4">
-                            <h2 class="display-4">{{ primary_category.0 }}</h2>
-                            <p class="lead">Score: {{ primary_category.1 }}</p>
+                            <h2 class="display-4">{{ result_data.primary_category }}</h2>
+                            <p class="lead">Score: {{ result_data.primary_score }}</p>
+                            {% if result_interpretations.primary_category %}
+                                <div class="mt-3">
+                                    <p>{{ result_interpretations.primary_category }}</p>
+                                </div>
+                            {% endif %}
                         </div>
 
-                        {% if matching_results %}
-                            {% for result in matching_results %}
+                        {% if result_data.secondary_gifts %}
+                            <h3 class="mt-4">Secondary Gifts</h3>
+                            {% for gift in result_data.secondary_gifts %}
                                 <div class="card mb-3">
                                     <div class="card-header">
-                                        <h3>{{ result.category }}</h3>
+                                        <h4>{{ gift.category }} (Score: {{ gift.score }})</h4>
                                     </div>
                                     <div class="card-body">
-                                        <p>{{ result.description }}</p>
+                                        {% if gift.category in result_interpretations %}
+                                            <p>{{ result_interpretations|get_item:gift.category }}</p>
+                                        {% endif %}
                                     </div>
                                 </div>
                             {% endfor %}
@@ -43,7 +52,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {% for category, score in scores.items %}
+                                    {% for category, score in result_data.scores.items %}
                                     <tr>
                                         <td>{{ category }}</td>
                                         <td>{{ score }}</td>
@@ -54,13 +63,17 @@
                         </div>
                     {% else %}
                         <div class="alert alert-warning">
-                            <p>No results were calculated. This could be because you didn't select any answer options or the quiz is not configured correctly.</p>
+                            <p>No results were calculated. This could be because you skipped too many questions or the quiz is not configured correctly.</p>
                         </div>
                     {% endif %}
+                    
+                    <div class="alert alert-info mt-4">
+                        <p><i class="fas fa-link"></i> Bookmark this page to access your results later. Your results will be available until {{ user_quiz.expires_at|date:"F j, Y" }}.</p>
+                    </div>
                 </div>
                 <div class="card-footer">
                     <div class="d-flex justify-content-between">
-                        <a href="{% url 'quiz-detail' quiz.id %}" class="btn btn-outline-primary">Retake Quiz</a>
+                        <a href="{% url 'quiz-start' quiz.id %}" class="btn btn-outline-primary">Retake Quiz</a>
                         <a href="{% url 'home' %}" class="btn btn-primary">Back to Home</a>
                     </div>
                 </div>
@@ -68,4 +81,23 @@
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+    // Template filter implementation for accessing dictionary values by key 
+    // (needed for result_interpretations dictionary)
+    if (!window.filters) {
+        window.filters = {};
+    }
+    
+    window.filters.get_item = function(dictionary, key) {
+        return dictionary[key];
+    };
+    
+    // Register custom template filter
+    if (typeof django !== 'undefined' && django.template) {
+        django.template.defaultfilters.get_item = window.filters.get_item;
+    }
+</script>
 {% endblock %} 

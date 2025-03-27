@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block title %}Start Quiz: {{ quiz.title }} | Quiz App{% endblock %}
+
+{% block og_title %}Start Quiz: {{ quiz.title }}{% endblock %}
+{% block og_description %}Enter your name to begin the {{ quiz.title }}{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h1 class="h3 mb-0">{{ quiz.title }}</h1>
+                </div>
+                <div class="card-body">
+                    {% if quiz.description %}
+                    <div class="mb-4">
+                        <p>{{ quiz.description }}</p>
+                    </div>
+                    {% endif %}
+                    
+                    <div class="alert alert-info">
+                        <p><i class="fas fa-info-circle"></i> You'll see questions one at a time. You can skip questions if you're not sure of an answer.</p>
+                    </div>
+                    
+                    <form method="post" class="mt-4">
+                        {% csrf_token %}
+                        
+                        {% if error %}
+                        <div class="alert alert-danger">
+                            {{ error }}
+                        </div>
+                        {% endif %}
+                        
+                        <div class="form-group mb-4">
+                            <label for="user_name">Your Name</label>
+                            <input type="text" class="form-control" id="user_name" name="user_name" placeholder="Enter your name" required>
+                            <small class="form-text text-muted">Your quiz results will be stored with this name.</small>
+                        </div>
+                        
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-primary btn-lg">Begin Quiz</button>
+                            <a href="{% url 'home' %}" class="btn btn-outline-secondary ml-2">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

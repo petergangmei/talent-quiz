@@ -10,14 +10,27 @@ The Extensive Spiritual Gifts Quiz has been implemented as part of the Quiz Appl
 4. Counsel/Wisdom
 5. Service/Practical Support
 
+## New Step-by-Step Quiz Experience
+
+The quiz now features a step-by-step experience with the following improvements:
+
+1. **User Identification**: Users enter their name before starting a quiz
+2. **One Question at a Time**: Questions are presented individually for better focus
+3. **Progress Tracking**: A progress bar shows completion percentage
+4. **Skip Option**: Users can skip questions they're unsure about
+5. **Persistent Results**: Quiz results are stored and accessible for 30 days
+6. **Unique Result URLs**: Each completed quiz has a unique URL with token for access
+
 ## Database Schema
 
-The quiz utilizes the existing data model structure:
+The quiz utilizes the following data model structure:
 
 - **Quiz**: The main quiz entity
 - **Question**: 20 questions about personal tendencies and preferences
 - **AnswerOption**: 4 options per question, each with a JSON mapping to categories and points
 - **QuizResult**: Interpretation of scores for each category
+- **UserQuiz**: Tracks a user's quiz session with name, IP, progress, and results
+- **UserResponse**: Records individual responses to questions (or skips)
 
 ## Setup Process
 
@@ -43,16 +56,22 @@ The scoring algorithm follows these steps:
 
 3. **Calculate Results**: After processing all answers, determine the primary spiritual gift (category with highest score).
 
-4. **Identify Secondary Gifts**: Categories with scores close to the primary gift (within 10-15%) are considered secondary gifts.
+4. **Identify Secondary Gifts**: Categories with scores close to the primary gift (within 15% of primary) are considered secondary gifts.
 
 5. **Match Result Interpretations**: Display the descriptions corresponding to the user's highest-scoring categories.
 
-The algorithm is implemented in the `quiz_submit` view, which:
-- Processes form submissions
-- Calculates category scores
-- Identifies the primary category
-- Finds matching result interpretations
-- Displays personalized results
+## User Experience Flow
+
+1. **Start**: User visits the quiz detail page and clicks "Start Quiz"
+2. **Name Entry**: User provides their name to begin
+3. **Question Navigation**: 
+   - One question is displayed at a time
+   - User selects an answer or skips
+   - Progress bar updates after each question
+4. **Results**: Upon completion, detailed results are shown with:
+   - Primary gift with score and interpretation
+   - Secondary gifts with scores and interpretations
+   - Complete breakdown of all category scores
 
 ## Quiz Content
 
@@ -66,26 +85,29 @@ The quiz includes questions about:
 
 Each answer option is carefully mapped to one or more spiritual gift categories with appropriate point values.
 
-## Accessing the Quiz
+## Result Persistence
 
-Users can access the quiz through the main application:
+Users can:
+- Bookmark their result page for future reference
+- Return to view results for up to 30 days
+- Take the quiz again to get updated results
 
-1. Navigate to the home page
-2. Find "Extensive Spiritual Gifts Quiz" in the available quizzes
-3. Complete all 20 questions
-4. Submit to see personalized results
+## Maintenance and Cleanup
 
-## Result Interpretation
+A management command is available to clean up expired quiz attempts:
 
-After completing the quiz, users receive:
-- Their primary spiritual gift category
-- The score for each category
-- Detailed descriptions of their top gifts
-- Suggestions for using these gifts in ministry or community service
+```bash
+# Preview what would be deleted
+python manage.py cleanup_expired_quizzes --dry-run --settings=core.settings.dev
+
+# Actually delete expired quiz attempts
+python manage.py cleanup_expired_quizzes --settings=core.settings.dev
+```
 
 ## Technical Implementation
 
 - The `JSONField` in the `AnswerOption` model stores the category-point mappings
-- The algorithm in `quiz_submit` view aggregates scores per category
-- The `QuizResult` model stores score ranges and interpretations
+- The algorithm in `calculate_results` aggregates scores per category
+- The `UserQuiz` model stores quiz progress and result data
+- The `UserResponse` model tracks individual question responses
 - Templates display questions, options, and results in a user-friendly format 
