@@ -10,7 +10,7 @@ SECRET_KEY = 'django-insecure-(^(8piy@*znaaptk*=t)+i2zkqe_x=bja5g(ko=x-!mfemyni$
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '127.0.0.1:8000', 'talent-quiz.rcfd.in']
 
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
