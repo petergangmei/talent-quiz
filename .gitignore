@@ -1,0 +1,7 @@
+steps.md
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
