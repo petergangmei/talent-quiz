@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ quiz.title }} | Quiz App{% endblock %}
+
+{% block og_title %}{{ quiz.title }} | Quiz App{% endblock %}
+{% block og_description %}Take the {{ quiz.title }} quiz and discover your results!{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <h1 class="mb-4">{{ quiz.title }}</h1>
+            
+            {% if quiz.description %}
+            <div class="card mb-4">
+                <div class="card-body">
+                    <p class="card-text">{{ quiz.description }}</p>
+                </div>
+            </div>
+            {% endif %}
+            
+            <form action="{% url 'quiz-submit' quiz.id %}" method="post">
+                {% csrf_token %}
+                
+                {% for question in quiz.questions.all %}
+                <div class="card mb-4">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0">Question {{ forloop.counter }}: {{ question.text }}</h5>
+                    </div>
+                    <div class="card-body">
+                        {% for option in question.answer_options.all %}
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" 
+                                   type="radio" 
+                                   name="question_{{ question.id }}" 
+                                   id="option_{{ option.id }}" 
+                                   value="{{ option.id }}" 
+                                   required>
+                            <label class="form-check-label" for="option_{{ option.id }}">
+                                {{ option.text }}
+                            </label>
+                        </div>
+                        {% empty %}
+                        <p class="text-muted">No answer options available for this question.</p>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% empty %}
+                <div class="alert alert-warning">
+                    <p>This quiz doesn't have any questions yet.</p>
+                </div>
+                {% endfor %}
+                
+                {% if quiz.questions.all %}
+                <div class="text-center mb-5">
+                    <button type="submit" class="btn btn-primary btn-lg">Submit Answers</button>
+                </div>
+                {% else %}
+                <div class="text-center mb-5">
+                    <a href="{% url 'home' %}" class="btn btn-secondary">Back to Home</a>
+                </div>
+                {% endif %}
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %} 

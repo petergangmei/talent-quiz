@@ -1,0 +1,3 @@
+"""
+Management commands module initialization.
+""" 

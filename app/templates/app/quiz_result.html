@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+
+{% block title %}Results: {{ quiz.title }} | Quiz App{% endblock %}
+
+{% block og_title %}Quiz Results: {{ quiz.title }}{% endblock %}
+{% block og_description %}See your result for the {{ quiz.title }} quiz!{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <div class="card border-primary mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h1 class="h2 mb-0">Your Results: {{ quiz.title }}</h1>
+                </div>
+                <div class="card-body">
+                    {% if primary_category %}
+                        <div class="text-center mb-4">
+                            <h2 class="display-4">{{ primary_category.0 }}</h2>
+                            <p class="lead">Score: {{ primary_category.1 }}</p>
+                        </div>
+
+                        {% if matching_results %}
+                            {% for result in matching_results %}
+                                <div class="card mb-3">
+                                    <div class="card-header">
+                                        <h3>{{ result.category }}</h3>
+                                    </div>
+                                    <div class="card-body">
+                                        <p>{{ result.description }}</p>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+
+                        <h3 class="mt-4">All Scores</h3>
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Category</th>
+                                        <th>Score</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for category, score in scores.items %}
+                                    <tr>
+                                        <td>{{ category }}</td>
+                                        <td>{{ score }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <div class="alert alert-warning">
+                            <p>No results were calculated. This could be because you didn't select any answer options or the quiz is not configured correctly.</p>
+                        </div>
+                    {% endif %}
+                </div>
+                <div class="card-footer">
+                    <div class="d-flex justify-content-between">
+                        <a href="{% url 'quiz-detail' quiz.id %}" class="btn btn-outline-primary">Retake Quiz</a>
+                        <a href="{% url 'home' %}" class="btn btn-primary">Back to Home</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 
