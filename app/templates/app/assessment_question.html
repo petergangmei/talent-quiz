@@ -5,6 +5,70 @@
 {% block og_title %}Question {{ question.order }} of {{ total_questions }}{% endblock %}
 {% block og_description %}{{ question.text }}{% endblock %}
 
+{% block extra_head %}
+<style>
+    /* Custom radio button styling */
+    .custom-radio-container {
+        display: block;
+        position: relative;
+        width: 100%;
+        cursor: pointer;
+    }
+    
+    .custom-radio-input {
+        position: absolute;
+        opacity: 0;
+        cursor: pointer;
+        height: 0;
+        width: 0;
+    }
+    
+    .custom-radio-circle {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 50px;
+        width: 50px;
+        background-color: #f8f9fa;
+        border: 2px solid #dee2e6;
+        border-radius: 50%;
+        margin: 0 auto;
+        transition: all 0.2s ease;
+    }
+    
+    .custom-radio-container:hover .custom-radio-circle {
+        border-color: #007bff;
+        background-color: #e9f2ff;
+    }
+    
+    .custom-radio-input:checked + .custom-radio-circle {
+        background-color: #007bff;
+        border-color: #0056b3;
+        color: white;
+    }
+    
+    .rating-number {
+        font-size: 22px;
+        font-weight: bold;
+    }
+    
+    .rating-column {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .rating-label {
+        font-size: 0.8rem;
+        text-align: center;
+        margin-bottom: 10px;
+        min-height: 40px;
+        display: flex;
+        align-items: center;
+    }
+</style>
+{% endblock %}
+
 {% block content %}
 <div class="container">
     <div class="row">
@@ -31,54 +95,58 @@
                     <form method="post">
                         {% csrf_token %}
                         
-                        <div class="rating-scale mb-4">
-                            <div class="row text-center">
-                                <div class="col">
-                                    <strong>Highly<br>characteristic</strong>
+                        <div class="rating-options mb-4">
+                            <div class="row">
+                                <!-- Rating Labels -->
+                                {% for option in question.answer_options.all %}
+                                <div class="col rating-column">
+                                    <div class="rating-label">
+                                        {% if forloop.counter == 1 %}
+                                        <span>Highly<br>characteristic</span>
+                                        {% elif forloop.counter == 2 %}
+                                        <span>Most of<br>the time</span>
+                                        {% elif forloop.counter == 3 %}
+                                        <span>Frequently<br>(50%)</span>
+                                        {% elif forloop.counter == 4 %}
+                                        <span>Occasionally<br>(25%)</span>
+                                        {% elif forloop.counter == 5 %}
+                                        <span>Not at all<br>characteristic</span>
+                                        {% endif %}
+                                    </div>
                                 </div>
-                                <div class="col">
-                                    <strong>Most of<br>the time</strong>
-                                </div>
-                                <div class="col">
-                                    <strong>Frequently<br>(50%)</strong>
-                                </div>
-                                <div class="col">
-                                    <strong>Occasionally<br>(25%)</strong>
-                                </div>
-                                <div class="col">
-                                    <strong>Not at all<br>characteristic</strong>
-                                </div>
+                                {% endfor %}
                             </div>
-                            <div class="row text-center">
+                            
+                            <div class="row mb-4">
+                                <!-- Rating Numbers and Radio Buttons -->
+                                {% for option in question.answer_options.all %}
                                 <div class="col">
-                                    <h3>5</h3>
+                                    <label class="custom-radio-container">
+                                        <input class="custom-radio-input" 
+                                               type="radio" 
+                                               name="option" 
+                                               id="option_{{ option.id }}" 
+                                               value="{{ option.id }}"
+                                               {% if existing_response and existing_response.selected_option.id == option.id %}checked{% endif %}>
+                                        <div class="custom-radio-circle">
+                                            <div class="rating-number">
+                                                {% if forloop.counter == 1 %}
+                                                5
+                                                {% elif forloop.counter == 2 %}
+                                                4
+                                                {% elif forloop.counter == 3 %}
+                                                3
+                                                {% elif forloop.counter == 4 %}
+                                                2
+                                                {% elif forloop.counter == 5 %}
+                                                1
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </label>
                                 </div>
-                                <div class="col">
-                                    <h3>4</h3>
-                                </div>
-                                <div class="col">
-                                    <h3>3</h3>
-                                </div>
-                                <div class="col">
-                                    <h3>2</h3>
-                                </div>
-                                <div class="col">
-                                    <h3>1</h3>
-                                </div>
+                                {% endfor %}
                             </div>
-                        </div>
-
-                        <div class="rating-options d-flex justify-content-between mb-4">
-                            {% for option in question.answer_options.all %}
-                            <div class="rating-option text-center">
-                                <input class="form-check-input" 
-                                       type="radio" 
-                                       name="option" 
-                                       id="option_{{ option.id }}" 
-                                       value="{{ option.id }}"
-                                       {% if existing_response and existing_response.selected_option.id == option.id %}checked{% endif %}>
-                            </div>
-                            {% endfor %}
                         </div>
                         
                         <div class="d-flex justify-content-between mt-4">
@@ -157,4 +225,18 @@
         </div>
     </div>
 </div>
+
+{% block extra_scripts %}
+<script>
+    // Fix for Bootstrap 4.6 modal compatibility (data-bs-* attributes)
+    document.addEventListener("DOMContentLoaded", function() {
+        var helpLink = document.querySelector('[data-bs-toggle="modal"]');
+        if (helpLink) {
+            helpLink.setAttribute('data-toggle', 'modal');
+            helpLink.setAttribute('data-target', '#ratingHelpModal');
+        }
+    });
+</script>
+{% endblock %}
+
 {% endblock %} 
