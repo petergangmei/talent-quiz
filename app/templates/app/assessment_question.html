@@ -5,6 +5,153 @@
 {% block og_title %}Question {{ question.order }} of {{ total_questions }}{% endblock %}
 {% block og_description %}{{ question.text }}{% endblock %}
 
+{% block extra_head %}
+<style>
+    /* Mobile-first approach */
+    .timer-option {
+        min-width: 90px;
+        margin: 0.25rem;
+        transition: all 0.2s ease;
+    }
+    
+    .rating-column {
+        text-align: center;
+        padding: 0.5rem 0.25rem;
+    }
+    
+    .rating-label {
+        margin-bottom: 0.75rem;
+        font-size: 0.8rem;
+        min-height: 2.5rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+    
+    .custom-radio-container {
+        display: block;
+        cursor: pointer;
+        text-align: center;
+        margin: 0 auto;
+    }
+    
+    .custom-radio-input {
+        position: absolute;
+        opacity: 0;
+        cursor: pointer;
+    }
+    
+    .custom-radio-circle {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 0 auto;
+        transition: all 0.2s ease;
+    }
+    
+    .custom-radio-circle:hover {
+        transform: scale(1.1);
+    }
+    
+    .countdown-text {
+        font-size: 1.5rem;
+    }
+    
+    /* Mobile optimizations */
+    @media (max-width: 767.98px) {
+        .container.py-5 {
+            padding-top: 1rem !important;
+            padding-bottom: 1rem !important;
+        }
+        
+        .card-body {
+            padding: 1rem;
+        }
+        
+        .timer-buttons-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.5rem;
+        }
+        
+        .timer-option {
+            min-width: unset;
+            width: 100%;
+            margin: 0;
+            padding: 0.5rem;
+            font-size: 0.9rem;
+        }
+        
+        .rating-container {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 1rem;
+        }
+        
+        .rating-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+        }
+        
+        .rating-option {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            padding: 0.75rem 0.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+            transition: all 0.2s ease;
+        }
+        
+        .rating-option:hover {
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+        
+        .rating-option.selected {
+            background-color: rgba(var(--bs-primary-rgb), 0.2);
+            border-color: var(--bs-primary);
+        }
+        
+        .rating-text {
+            flex: 1;
+            margin-left: 1rem;
+            font-size: 0.9rem;
+            text-align: left;
+        }
+        
+        .custom-radio-circle {
+            width: 40px;
+            height: 40px;
+            margin: 0;
+        }
+        
+        .p-4 {
+            padding: 1rem !important;
+        }
+    }
+    
+    /* Tablet and desktop optimizations */
+    @media (min-width: 768px) {
+        .rating-option {
+            display: none; /* Hide mobile layout on larger screens */
+        }
+        
+        .timer-buttons-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+    }
+</style>
+{% endblock %}
+
 {% block content %}
 <div class="container py-5">
     <div class="row">
@@ -37,19 +184,20 @@
                     
                     <!-- Timer Settings -->
                     <div class="p-4 bg-dark border rounded mb-4">
-                        <div class="d-flex flex-wrap justify-content-center gap-2">
-                            <button class="btn btn-outline-light rounded-pill px-4 timer-option" data-seconds="0">Immediate</button>
-                            <button class="btn btn-outline-light rounded-pill px-4 timer-option" data-seconds="3">3s</button>
-                            <button class="btn btn-outline-light rounded-pill px-4 timer-option" data-seconds="5">5s</button>
-                            <button class="btn btn-outline-light rounded-pill px-4 timer-option" data-seconds="10">10s</button>
-                            <button class="btn btn-outline-light rounded-pill px-4 timer-option" data-seconds="-1">Off</button>
+                        <div class="timer-buttons-container">
+                            <button class="btn btn-outline-light rounded-pill px-3 timer-option" data-seconds="0">Immediate</button>
+                            <button class="btn btn-outline-light rounded-pill px-3 timer-option" data-seconds="3">3s</button>
+                            <button class="btn btn-outline-light rounded-pill px-3 timer-option" data-seconds="5">5s</button>
+                            <button class="btn btn-outline-light rounded-pill px-3 timer-option" data-seconds="10">10s</button>
+                            <button class="btn btn-outline-light rounded-pill px-3 timer-option" data-seconds="-1">Off</button>
                         </div>
                     </div>
                     
                     <form method="post" id="questionForm">
                         {% csrf_token %}
                         
-                        <div class="bg-dark p-4 rounded mb-4">
+                        <!-- Desktop/Tablet View for Ratings -->
+                        <div class="bg-dark p-4 rounded mb-4 d-none d-md-block">
                             <div class="row">
                                 <!-- Rating Labels -->
                                 {% for option in question.answer_options.all %}
@@ -101,6 +249,50 @@
                                 </div>
                                 {% endfor %}
                             </div>
+                        </div>
+                        
+                        <!-- Mobile View for Ratings -->
+                        <div class="bg-dark p-3 rounded mb-4 d-md-none rating-container">
+                            {% for option in question.answer_options.all %}
+                            <div class="rating-option" id="mobile_option_container_{{ option.id }}">
+                                <label class="d-flex align-items-center w-100 mb-0">
+                                    <input class="custom-radio-input" 
+                                           type="radio" 
+                                           name="option" 
+                                           id="mobile_option_{{ option.id }}" 
+                                           value="{{ option.id }}"
+                                           {% if existing_response and existing_response.selected_option.id == option.id %}checked{% endif %}>
+                                    <div class="custom-radio-circle bg-dark border border-2 border-light">
+                                        <div class="h5 mb-0">
+                                            {% if forloop.counter == 1 %}
+                                            5
+                                            {% elif forloop.counter == 2 %}
+                                            4
+                                            {% elif forloop.counter == 3 %}
+                                            3
+                                            {% elif forloop.counter == 4 %}
+                                            2
+                                            {% elif forloop.counter == 5 %}
+                                            1
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    <div class="rating-text">
+                                        {% if forloop.counter == 1 %}
+                                        Highly characteristic
+                                        {% elif forloop.counter == 2 %}
+                                        Most of the time
+                                        {% elif forloop.counter == 3 %}
+                                        Frequently (50%)
+                                        {% elif forloop.counter == 4 %}
+                                        Occasionally (25%)
+                                        {% elif forloop.counter == 5 %}
+                                        Not at all characteristic
+                                        {% endif %}
+                                    </div>
+                                </label>
+                            </div>
+                            {% endfor %}
                         </div>
                         
                         <!-- Countdown Timer (initially hidden) -->
@@ -203,6 +395,7 @@
         const nextButton = document.getElementById('nextButton');
         const timerOptions = document.querySelectorAll('.timer-option');
         const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+        const mobileRatingOptions = document.querySelectorAll('.rating-option');
         
         // Timer and submission state
         let countdown = null;
@@ -244,6 +437,9 @@
             if (checkedRadio) {
                 const circle = checkedRadio.nextElementSibling;
                 styleSelectedRadio(circle);
+                
+                // Also highlight the mobile container if we're on mobile
+                highlightMobileOption(checkedRadio);
             }
         }
         
@@ -258,6 +454,19 @@
             // Add styling to the selected circle
             element.classList.remove('border-light', 'bg-dark');
             element.classList.add('bg-primary', 'border-primary');
+        }
+        
+        // Highlight the selected mobile option container
+        function highlightMobileOption(radio) {
+            // Remove selected class from all option containers
+            mobileRatingOptions.forEach(option => {
+                option.classList.remove('selected');
+            });
+            
+            // Add selected class to the container of the checked radio
+            if (radio.closest('.rating-option')) {
+                radio.closest('.rating-option').classList.add('selected');
+            }
         }
 
         // Handle form submission
@@ -277,7 +486,7 @@
                 if (existingError) existingError.remove();
                 
                 // Insert before the ratings section
-                const ratingsSection = document.querySelector('.bg-dark.p-4.rounded.mb-4');
+                const ratingsSection = document.querySelector('.bg-dark.p-4.rounded.mb-4, .bg-dark.p-3.rounded.mb-4');
                 form.insertBefore(errorDiv, ratingsSection);
                 
                 return;
@@ -353,9 +562,27 @@
                     const circle = this.nextElementSibling;
                     styleSelectedRadio(circle);
                     
+                    // Also highlight mobile option container
+                    highlightMobileOption(this);
+                    
                     if (selectedDuration !== '-1') {
                         startCountdown();
                     }
+                }
+            });
+        });
+        
+        // Mobile rating option click handling
+        mobileRatingOptions.forEach(option => {
+            option.addEventListener('click', function() {
+                // Find the radio inside this container and check it
+                const radio = this.querySelector('.custom-radio-input');
+                if (radio) {
+                    radio.checked = true;
+                    
+                    // Trigger the change event
+                    const event = new Event('change');
+                    radio.dispatchEvent(event);
                 }
             });
         });
@@ -364,12 +591,14 @@
         document.querySelectorAll('.custom-radio-circle').forEach((circle, index) => {
             circle.addEventListener('click', function() {
                 // Find the radio input and check it
-                const radio = radioButtons[index];
-                radio.checked = true;
-                
-                // Trigger the change event
-                const event = new Event('change');
-                radio.dispatchEvent(event);
+                const radio = this.parentElement.querySelector('.custom-radio-input');
+                if (radio) {
+                    radio.checked = true;
+                    
+                    // Trigger the change event
+                    const event = new Event('change');
+                    radio.dispatchEvent(event);
+                }
             });
         });
         
