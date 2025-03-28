@@ -5,404 +5,52 @@
 {% block og_title %}Question {{ question.order }} of {{ total_questions }}{% endblock %}
 {% block og_description %}{{ question.text }}{% endblock %}
 
-{% block extra_head %}
-<style>
-    body {
-        background-color: var(--bg-dark);
-        color: var(--text-light);
-    }
-
-    .container {
-        padding-top: 30px;
-        padding-bottom: 30px;
-    }
-
-    .card {
-        background-color: var(--bg-card);
-        border: none;
-        border-radius: 10px;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-        overflow: hidden;
-    }
-
-    .card-header {
-        background-color: var(--bg-darker);
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        color: var(--text-light);
-    }
-
-    .card-body {
-        padding: 25px;
-    }
-
-    .card-footer {
-        background-color: var(--bg-darker);
-        border-top: 1px solid rgba(255, 255, 255, 0.1);
-        color: var(--text-muted);
-    }
-
-    /* Custom radio button styling */
-    .custom-radio-container {
-        display: block;
-        position: relative;
-        width: 100%;
-        cursor: pointer;
-    }
-    
-    .custom-radio-input {
-        position: absolute;
-        opacity: 0;
-        cursor: pointer;
-        height: 0;
-        width: 0;
-    }
-    
-    .custom-radio-circle {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        height: 50px;
-        width: 50px;
-        border-radius: 50%;
-        margin: 0 auto;
-        border: 2px solid rgba(255, 255, 255, 0.2);
-        transition: all 0.2s ease;
-        background-color: rgba(255, 255, 255, 0.05);
-    }
-    
-    .custom-radio-container:hover .custom-radio-circle {
-        border-color: var(--primary);
-        background-color: rgba(228, 124, 142, 0.2);
-    }
-    
-    .custom-radio-input:checked + .custom-radio-circle {
-        background-color: var(--primary);
-        border-color: var(--primary-dark);
-        color: var(--text-light);
-        box-shadow: 0 0 10px rgba(228, 124, 142, 0.5);
-    }
-    
-    .rating-number {
-        font-size: 22px;
-        font-weight: bold;
-        color: var(--text-light);
-    }
-    
-    .rating-column {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-    }
-    
-    .rating-label {
-        font-size: 0.8rem;
-        text-align: center;
-        margin-bottom: 10px;
-        min-height: 40px;
-        display: flex;
-        align-items: center;
-        color: var(--text-light);
-    }
-
-    /* Progress bar styling */
-    .progress {
-        height: 25px;
-        background-color: var(--bg-card);
-        border-radius: 15px;
-        overflow: hidden;
-        box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2);
-    }
-
-    .progress-bar {
-        background-color: var(--primary);
-        color: var(--text-light);
-        font-weight: bold;
-        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
-    }
-    
-    /* Countdown timer styling */
-    .countdown-container {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin-top: 15px;
-        color: var(--text-light);
-        background-color: var(--bg-darker);
-        padding: 10px;
-        border-radius: 20px;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-    }
-    
-    .countdown-timer {
-        font-size: 20px;
-        font-weight: bold;
-        margin-left: 10px;
-        min-width: 40px;
-        text-align: center;
-        color: var(--primary);
-    }
-    
-    .countdown-text {
-        animation: pulse 1s infinite;
-    }
-    
-    @keyframes pulse {
-        0% { opacity: 1; }
-        50% { opacity: 0.5; }
-        100% { opacity: 1; }
-    }
-    
-    /* Timer settings styling */
-    .timer-settings {
-        border-radius: 10px;
-        padding: 20px;
-        margin-bottom: 20px;
-        background-color: var(--bg-darker);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-    }
-    
-    .timer-settings-header {
-        font-weight: 600;
-        color: var(--text-light);
-        margin-bottom: 15px;
-    }
-    
-    .timer-options-container {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 10px;
-        justify-content: center;
-    }
-    
-    .timer-option {
-        cursor: pointer;
-        padding: 8px 15px;
-        border-radius: 25px;
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        transition: all 0.2s ease;
-        text-align: center;
-        min-width: 80px;
-        font-weight: 500;
-        background-color: var(--bg-card);
-        color: var(--text-light);
-    }
-    
-    .timer-option.active {
-        background-color: var(--primary);
-        color: var(--text-light);
-        border-color: var(--primary-dark);
-        box-shadow: 0 2px 8px rgba(228, 124, 142, 0.5);
-    }
-    
-    .timer-option:hover:not(.active) {
-        background-color: rgba(228, 124, 142, 0.2);
-        border-color: var(--primary);
-    }
-    
-    /* Help text styling */
-    .question-text {
-        font-weight: 600;
-        background-color: var(--bg-darker);
-        padding: 20px;
-        border-radius: 10px;
-        margin-bottom: 20px;
-        border-left: 4px solid var(--primary);
-        color: var(--text-light);
-        font-size: 1.1rem;
-        line-height: 1.5;
-    }
-    
-    .help-text-container {
-        background-color: rgba(255, 255, 255, 0.05);
-        border-radius: 10px;
-        margin-bottom: 20px;
-        padding: 20px;
-        border-left: 3px solid var(--primary-light);
-        display: block; /* Visible by default */
-    }
-    
-    .help-text-item {
-        margin-bottom: 15px;
-        position: relative;
-        padding-left: 25px;
-        border-left: 2px solid rgba(228, 124, 142, 0.3);
-        padding-top: 5px;
-        padding-bottom: 5px;
-    }
-    
-    .help-text-item:last-child {
-        margin-bottom: 0;
-    }
-    
-    .help-text {
-        color: var(--text-light);
-        font-size: 0.95rem;
-        margin-bottom: 0;
-        line-height: 1.5;
-    }
-    
-    /* Additional help text styling */
-    .help-text-header {
-        margin-bottom: 15px;
-        font-size: 1.1rem;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        padding-bottom: 10px;
-        color: var(--primary-light);
-    }
-    
-    .help-number {
-        display: inline-block;
-        width: 24px;
-        height: 24px;
-        line-height: 24px;
-        text-align: center;
-        background-color: var(--primary);
-        color: var(--text-light);
-        border-radius: 50%;
-        margin-right: 10px;
-        font-weight: bold;
-        position: absolute;
-        left: -12px;
-        top: 5px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-    }
-
-    /* Button styling */
-    .btn-primary {
-        background-color: var(--primary);
-        border-color: var(--primary-dark);
-        color: white;
-        font-weight: 500;
-        border-radius: 25px;
-        padding: 8px 20px;
-        transition: all 0.2s ease;
-    }
-
-    .btn-primary:hover {
-        background-color: var(--primary-dark);
-        border-color: var(--primary-dark);
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    }
-
-    .btn-outline-secondary {
-        color: var(--text-light);
-        border-color: rgba(255, 255, 255, 0.2);
-        border-radius: 25px;
-        padding: 8px 20px;
-        transition: all 0.2s ease;
-    }
-
-    .btn-outline-secondary:hover {
-        background-color: rgba(255, 255, 255, 0.1);
-        color: var(--text-light);
-        border-color: rgba(255, 255, 255, 0.3);
-    }
-
-    /* Alert styling */
-    .alert-danger {
-        background-color: rgba(217, 83, 79, 0.2);
-        border-color: rgba(217, 83, 79, 0.3);
-        color: #f8d7da;
-        border-radius: 10px;
-        padding: 15px;
-        margin-bottom: 20px;
-        position: relative;
-    }
-
-    /* Modal styling */
-    .modal-content {
-        background-color: var(--bg-card);
-        color: var(--text-light);
-        border: none;
-        border-radius: 10px;
-    }
-
-    .modal-header {
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        background-color: var(--bg-darker);
-    }
-
-    .modal-footer {
-        border-top: 1px solid rgba(255, 255, 255, 0.1);
-        background-color: var(--bg-darker);
-    }
-
-    .table {
-        color: var(--text-light);
-    }
-
-    .table th, .table td {
-        border-color: rgba(255, 255, 255, 0.1);
-    }
-</style>
-{% endblock %}
-
 {% block content %}
-<div class="container">
+<div class="container py-5">
     <div class="row">
         <div class="col-md-8 offset-md-2">
             <!-- Progress Bar -->
             <div class="progress mb-4" style="height: 25px;">
-                <div class="progress-bar" role="progressbar" style="width: {{ progress }}%;" 
+                <div class="progress-bar bg-primary" role="progressbar" style="width: {{ progress }}%;" 
                      aria-valuenow="{{ progress }}" aria-valuemin="0" aria-valuemax="100">
                     Question {{ question.order }} of {{ total_questions }}
                 </div>
             </div>
             
-            <div class="card mb-4">
-                <div class="card-header">
+            <div class="card bg-dark text-light shadow-lg mb-4">
+                <div class="card-header bg-darker">
                     <div class="d-flex justify-content-between align-items-center">
                         <span>Statement {{ question.order }}</span>
                     </div>
                 </div>
                 <div class="card-body">
                     {% if error %}
-                    <div class="alert alert-danger" style="background-color: rgba(217, 83, 79, 0.2); border-color: rgba(217, 83, 79, 0.3); color: #f8d7da; border-radius: 10px; padding: 15px;">
+                    <div class="alert alert-danger">
                         {{ error }}
                     </div>
                     {% endif %}
                     
-                    <!-- Question Text with Help Text -->
-                    <div class="question-text">
-                        {{ question.text }}
-                    </div>
-                    
-                    <!-- Help Text Container - Visible by default -->
-                    <div class="help-text-container" id="helpTextContainer">
-                        <h5 class="help-text-header">Reflection Prompts</h5>
-                        <!-- First help item -->
-                        <div class="help-text-item">
-                            <span class="help-number">1</span>
-                            <p class="help-text" id="helpText1">Think about how attuned you are to the emotional pain or struggles of those around you.</p>
-                        </div>
-                        <!-- Second help item -->
-                        <div class="help-text-item">
-                            <span class="help-number">2</span>
-                            <p class="help-text" id="helpText2">Reflect on whether you notice subtle cues that indicate someone is suffering.</p>
-                        </div>
-                        <!-- Third help item -->
-                        <div class="help-text-item">
-                            <span class="help-number">3</span>
-                            <p class="help-text" id="helpText3">Consider if you naturally offer empathy and a listening ear when others are in distress.</p>
-                        </div>
+                    <!-- Question Text -->
+                    <div class="p-4 bg-dark border-start border-primary border-3 rounded mb-4">
+                        <p class="h5 mb-0">{{ question.text }}</p>
                     </div>
                     
                     <!-- Timer Settings -->
-                    <div class="timer-settings">
-                        <h5 class="timer-settings-header">Set Reflection Timer:</h5>
-                        <div class="timer-options-container">
-                            <div class="timer-option" data-seconds="0">Immediate</div>
-                            <div class="timer-option" data-seconds="3">3s</div>
-                            <div class="timer-option" data-seconds="5">5s</div>
-                            <div class="timer-option" data-seconds="10">10s</div>
-                            <div class="timer-option" data-seconds="-1">Off</div>
+                    <div class="p-4 bg-dark border rounded mb-4">
+                        <h5 class="mb-4">Set Reflection Timer:</h5>
+                        <div class="d-flex flex-wrap justify-content-center gap-2">
+                            <button class="btn btn-outline-light rounded-pill px-4 timer-option" data-seconds="0">Immediate</button>
+                            <button class="btn btn-outline-light rounded-pill px-4 timer-option" data-seconds="3">3s</button>
+                            <button class="btn btn-outline-light rounded-pill px-4 timer-option" data-seconds="5">5s</button>
+                            <button class="btn btn-outline-light rounded-pill px-4 timer-option" data-seconds="10">10s</button>
+                            <button class="btn btn-outline-light rounded-pill px-4 timer-option" data-seconds="-1">Off</button>
                         </div>
                     </div>
                     
                     <form method="post" id="questionForm">
                         {% csrf_token %}
                         
-                        <div class="rating-options mb-4">
+                        <div class="bg-dark p-4 rounded mb-4">
                             <div class="row">
                                 <!-- Rating Labels -->
                                 {% for option in question.answer_options.all %}
@@ -435,8 +83,8 @@
                                                id="option_{{ option.id }}" 
                                                value="{{ option.id }}"
                                                {% if existing_response and existing_response.selected_option.id == option.id %}checked{% endif %}>
-                                        <div class="custom-radio-circle">
-                                            <div class="rating-number">
+                                        <div class="custom-radio-circle bg-dark border border-2 border-light">
+                                            <div class="h4 mb-0">
                                                 {% if forloop.counter == 1 %}
                                                 5
                                                 {% elif forloop.counter == 2 %}
@@ -457,16 +105,18 @@
                         </div>
                         
                         <!-- Countdown Timer (initially hidden) -->
-                        <div class="countdown-container d-none" id="countdownContainer">
-                            <span>Next question in</span>
-                            <div class="countdown-timer">
-                                <span id="countdownTimer" class="countdown-text">10</span>s
+                        <div class="d-none text-center p-3 bg-dark rounded mb-4" id="countdownContainer">
+                            <div class="d-flex align-items-center justify-content-center">
+                                <span>Next question in</span>
+                                <span class="mx-2 text-primary h4 mb-0">
+                                    <span id="countdownTimer" class="countdown-text">10</span>s
+                                </span>
+                                <button type="button" id="cancelCountdown" class="btn btn-sm btn-outline-light ms-2">Cancel</button>
                             </div>
-                            <button type="button" id="cancelCountdown" class="btn btn-sm btn-outline-secondary ml-2">Cancel</button>
                         </div>
                         
                         <div class="d-flex justify-content-between mt-4">
-                            <button type="submit" name="action" value="skip" class="btn btn-outline-secondary">
+                            <button type="submit" name="action" value="skip" class="btn btn-outline-light">
                                 Skip Question
                             </button>
                             <button type="submit" name="action" value="next" class="btn btn-primary" id="nextButton">
@@ -476,7 +126,7 @@
                     </form>
                 </div>
                 
-                <div class="card-footer text-muted">
+                <div class="card-footer bg-darker text-muted">
                     <div class="row">
                         <div class="col">
                             <small>Statement {{ question.order }} of 80 | Your progress will be saved automatically.</small>
@@ -496,16 +146,14 @@
 <!-- Rating Scale Help Modal -->
 <div class="modal fade" id="ratingHelpModal" tabindex="-1" aria-labelledby="ratingHelpModalLabel" aria-hidden="true">
     <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
+        <div class="modal-content bg-dark text-light">
+            <div class="modal-header border-secondary">
                 <h5 class="modal-title" id="ratingHelpModalLabel">Rating Scale Help</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true" class="text-light">&times;</span>
-                </button>
+                <button type="button" class="btn-close btn-close-white" data-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <div class="table-responsive">
-                    <table class="table">
+                    <table class="table table-dark">
                         <thead>
                             <tr>
                                 <th>Rating</th>
@@ -537,7 +185,7 @@
                     </table>
                 </div>
             </div>
-            <div class="modal-footer">
+            <div class="modal-footer border-secondary">
                 <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
             </div>
         </div>
@@ -556,16 +204,9 @@
         const nextButton = document.getElementById('nextButton');
         const timerOptions = document.querySelectorAll('.timer-option');
         
-        // Fix for Bootstrap 4.6 modal compatibility (data-bs-* attributes)
-        const helpLink = document.querySelector('[data-bs-toggle="modal"]');
-        if (helpLink) {
-            helpLink.setAttribute('data-toggle', 'modal');
-            helpLink.setAttribute('data-target', '#ratingHelpModal');
-        }
-        
-        // COUNTDOWN TIMER FUNCTIONALITY
+        // Timer functionality
         let countdown = null;
-        let selectedDuration = localStorage.getItem('quizTimerDuration') || '-1'; // Default to Off
+        let selectedDuration = localStorage.getItem('quizTimerDuration') || '-1';
         let timeLeft = parseInt(selectedDuration);
         
         // Initialize timer option selection
@@ -578,7 +219,6 @@
                 localStorage.setItem('quizTimerDuration', selectedDuration);
                 updateTimerOptionUI();
                 
-                // If a radio button is already selected, restart the countdown
                 const checkedRadio = document.querySelector('.custom-radio-input:checked');
                 if (checkedRadio && selectedDuration !== '-1' && selectedDuration !== 'Off') {
                     startCountdown();
@@ -605,44 +245,38 @@
         function updateTimerOptionUI() {
             timerOptions.forEach(option => {
                 if (option.getAttribute('data-seconds') === selectedDuration) {
-                    option.classList.add('active');
+                    option.classList.remove('btn-outline-light');
+                    option.classList.add('btn-primary');
                 } else {
-                    option.classList.remove('active');
+                    option.classList.remove('btn-primary');
+                    option.classList.add('btn-outline-light');
                 }
             });
         }
         
         function startCountdown() {
-            // Stop any existing countdown
             stopCountdown();
             
-            // If immediate, submit form right away
             if (selectedDuration === '0') {
                 form.querySelector('[name="action"]').value = 'next';
                 form.submit();
                 return;
             }
             
-            // If Off, do nothing
             if (selectedDuration === '-1') {
                 return;
             }
             
-            // Set initial time
             timeLeft = parseInt(selectedDuration);
             countdownTimer.textContent = timeLeft;
-            
-            // Show countdown
             countdownContainer.classList.remove('d-none');
             
-            // Start the countdown
             countdown = setInterval(function() {
                 timeLeft--;
                 countdownTimer.textContent = timeLeft;
                 
                 if (timeLeft <= 0) {
                     stopCountdown();
-                    // Submit the form
                     form.querySelector('[name="action"]').value = 'next';
                     form.submit();
                 }
@@ -650,13 +284,10 @@
         }
         
         function stopCountdown() {
-            // Clear the interval
             if (countdown) {
                 clearInterval(countdown);
                 countdown = null;
             }
-            
-            // Hide the countdown
             countdownContainer.classList.add('d-none');
         }
     });

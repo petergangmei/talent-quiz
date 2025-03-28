@@ -56,7 +56,7 @@ sudo cp "/home/ubuntu/$PROJECT_MAIN_DIR_NAME/server/nginx.conf" "/etc/nginx/site
 sudo ln -s "/etc/nginx/sites-available/$PROJECT_MAIN_DIR_NAME.conf" "/etc/nginx/sites-enabled/"
 
 sudo nginx -t
-sudo systemctl restart nginx
+# sudo systemctl restart nginx
 sudo systemctl reload nginx
 
 #create virtual environment

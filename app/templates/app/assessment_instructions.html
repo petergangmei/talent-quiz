@@ -20,7 +20,7 @@
     }
     
     .rating-scale {
-        background-color: var(--bg-light);
+        background-color: var(--bg-primary);
         border-radius: 8px;
         padding: 20px;
         margin-bottom: 2rem;
@@ -31,7 +31,7 @@
         padding: 10px;
         border-radius: 4px;
         margin-bottom: 10px;
-        background-color: white;
+        background-color: black;
         border-left: 3px solid var(--secondary);
     }
     
@@ -50,7 +50,7 @@
     }
     
     .instruction-highlight {
-        background-color: var(--secondary-light);
+        background-color: var(--primary-light);
         padding: 2px 5px;
         border-radius: 3px;
     }
@@ -70,6 +70,7 @@
     .pulse-animation {
         animation: pulse 2s infinite;
     }
+ 
 </style>
 {% endblock %}
 
@@ -89,7 +90,7 @@
                     
                     <div class="rating-scale mb-4">
                         <h3 class="mb-3">Response Scale</h3>
-                        <p>For each statement, select the response that best describes you:</p>
+                        <p class="text-light">For each statement, select the response that best describes you:</p>
                         
                         <div class="rating-item">
                             <span class="rating-number">5</span>
