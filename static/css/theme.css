@@ -14,23 +14,29 @@ html, body {
 
 :root {
   /* Primary Colors */
-  --primary: #E47C8E;    /* Pink - main brand color */
-  --primary-light: #F2A2B0; /* Lighter shade of primary */
-  --primary-dark: #C06070; /* Darker shade of primary */
+  --primary: #5885AF;
+  --primary-light: #C3E0E5;
+  --primary-dark: #41729F;
   
   /* Background Colors */
-  --bg-dark: #2F2420;    /* Dark Brown - main background */
-  --bg-darker: #231C18;  /* Slightly darker background */
-  --bg-card: #3A2E29;    /* Slightly lighter brown for cards */
-  
-  /* Accent Colors */
-  --accent: #FAE8E0;     /* Off-white accent */
-  --accent-dark: #E6D4CC; /* Slightly darker accent */
+  --bg-dark: #274472;
+  --bg-darker: #1D3253;
+  --bg-card: #335687;
   
   /* Text Colors */
-  --text-dark: #333333;  /* Dark text on light backgrounds */
-  --text-light: #F9F9F9; /* Light text on dark backgrounds */
-  --text-muted: #A7978F; /* Muted text color */
+  --text-light: #FFFFFF;
+  --text-dark: #274472;
+  
+  /* Accent Colors */
+  --accent: #C3E0E5;
+  --accent-light: #E1F1F4;
+  --accent-dark: #8BB9C7;
+  
+  /* Status Colors */
+  --success: #4CAF50;
+  --warning: #FFC107;
+  --danger: #F44336;
+  --info: #2196F3;
   
   /* Alert Colors */
   --success-bg: rgba(76, 175, 80, 0.2);
@@ -62,7 +68,8 @@ html, body {
 
 /* Background color helper classes */
 .bg-primary { background-color: var(--primary) !important; }
-.bg-secondary { background-color: var(--bg-card) !important; }
+.bg-primary-light { background-color: var(--primary-light) !important; }
+.bg-primary-dark { background-color: var(--primary-dark) !important; }
 .bg-dark { background-color: var(--bg-dark) !important; }
 .bg-darker { background-color: var(--bg-darker) !important; }
 .bg-card { background-color: var(--bg-card) !important; }
@@ -70,7 +77,11 @@ html, body {
 
 /* Text color helper classes */
 .text-primary { color: var(--primary) !important; }
+.text-primary-light { color: var(--primary-light) !important; }
+.text-primary-dark { color: var(--primary-dark) !important; }
 .text-light { color: var(--text-light) !important; }
+.text-dark { color: var(--text-dark) !important; }
+.text-accent { color: var(--accent) !important; }
 .text-muted { color: var(--text-muted) !important; }
 
 /* Alert styling */
@@ -253,4 +264,9 @@ html, body {
     min-height: 40px;
     display: flex;
     align-items: center;
-} 
+}
+
+/* Border Color Classes */
+.border-primary { border-color: var(--primary) !important; }
+.border-primary-light { border-color: var(--primary-light) !important; }
+.border-primary-dark { border-color: var(--primary-dark) !important; } 
