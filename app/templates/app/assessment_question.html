@@ -66,6 +66,60 @@
         display: flex;
         align-items: center;
     }
+    
+    /* Countdown timer styling */
+    .countdown-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: 15px;
+    }
+    
+    .countdown-timer {
+        font-size: 20px;
+        font-weight: bold;
+        color: #007bff;
+        margin-left: 10px;
+        min-width: 40px;
+        text-align: center;
+    }
+    
+    .countdown-text {
+        animation: pulse 1s infinite;
+    }
+    
+    @keyframes pulse {
+        0% { opacity: 1; }
+        50% { opacity: 0.5; }
+        100% { opacity: 1; }
+    }
+    
+    .timer-settings {
+        background-color: #f8f9fa;
+        border-radius: 8px;
+        padding: 15px;
+        margin-bottom: 20px;
+    }
+    
+    .timer-option {
+        cursor: pointer;
+        padding: 5px 10px;
+        border-radius: 4px;
+        margin-right: 5px;
+        border: 1px solid #dee2e6;
+        transition: all 0.2s ease;
+    }
+    
+    .timer-option.active {
+        background-color: #007bff;
+        color: white;
+        border-color: #0056b3;
+    }
+    
+    .timer-option:hover:not(.active) {
+        background-color: #e9f2ff;
+        border-color: #007bff;
+    }
 </style>
 {% endblock %}
 
@@ -92,7 +146,23 @@
                     </div>
                     {% endif %}
                     
-                    <form method="post">
+                    <!-- Timer Settings -->
+                    <div class="timer-settings">
+                        <div class="d-flex flex-wrap align-items-center justify-content-between">
+                            <div>
+                                <span>Auto-advance after selection:</span>
+                            </div>
+                            <div class="d-flex mt-2 mt-sm-0">
+                                <span class="timer-option" data-timer="manual">Manual</span>
+                                <span class="timer-option" data-timer="10">10s</span>
+                                <span class="timer-option" data-timer="5">5s</span>
+                                <span class="timer-option" data-timer="3">3s</span>
+                                <span class="timer-option" data-timer="0">Immediate</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <form method="post" id="questionForm">
                         {% csrf_token %}
                         
                         <div class="rating-options mb-4">
@@ -149,11 +219,20 @@
                             </div>
                         </div>
                         
+                        <!-- Countdown Timer (initially hidden) -->
+                        <div class="countdown-container d-none" id="countdownContainer">
+                            <span>Next question in</span>
+                            <div class="countdown-timer">
+                                <span id="countdownTimer" class="countdown-text">10</span>s
+                            </div>
+                            <button type="button" id="cancelCountdown" class="btn btn-sm btn-outline-secondary ml-2">Cancel</button>
+                        </div>
+                        
                         <div class="d-flex justify-content-between mt-4">
                             <button type="submit" name="action" value="skip" class="btn btn-outline-secondary">
                                 Skip Question
                             </button>
-                            <button type="submit" name="action" value="next" class="btn btn-primary">
+                            <button type="submit" name="action" value="next" class="btn btn-primary" id="nextButton">
                                 Next Question
                             </button>
                         </div>
@@ -167,7 +246,7 @@
                         </div>
                         <div class="col-auto">
                             <small>
-                                <a href="#" data-bs-toggle="modal" data-bs-target="#ratingHelpModal">Rating Scale Help</a>
+                                <a href="#" data-toggle="modal" data-target="#ratingHelpModal">Rating Scale Help</a>
                             </small>
                         </div>
                     </div>
@@ -183,7 +262,9 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="ratingHelpModalLabel">Rating Scale Help</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </div>
             <div class="modal-body">
                 <div class="table-responsive">
@@ -220,7 +301,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
             </div>
         </div>
     </div>
@@ -228,12 +309,112 @@
 
 {% block extra_scripts %}
 <script>
-    // Fix for Bootstrap 4.6 modal compatibility (data-bs-* attributes)
     document.addEventListener("DOMContentLoaded", function() {
-        var helpLink = document.querySelector('[data-bs-toggle="modal"]');
+        // Variables
+        const form = document.getElementById('questionForm');
+        const radioButtons = document.querySelectorAll('.custom-radio-input');
+        const countdownContainer = document.getElementById('countdownContainer');
+        const countdownTimer = document.getElementById('countdownTimer');
+        const cancelButton = document.getElementById('cancelCountdown');
+        const nextButton = document.getElementById('nextButton');
+        const timerOptions = document.querySelectorAll('.timer-option');
+        
+        // Fix for Bootstrap 4.6 modal compatibility (data-bs-* attributes)
+        const helpLink = document.querySelector('[data-bs-toggle="modal"]');
         if (helpLink) {
             helpLink.setAttribute('data-toggle', 'modal');
             helpLink.setAttribute('data-target', '#ratingHelpModal');
+        }
+        
+        let countdown = null;
+        let selectedDuration = localStorage.getItem('quizTimerDuration') || 'manual';
+        let timeLeft = parseInt(selectedDuration);
+        
+        // Initialize timer option selection
+        updateTimerOptionUI();
+        
+        // Add event listeners to timer options
+        timerOptions.forEach(option => {
+            option.addEventListener('click', function() {
+                selectedDuration = this.getAttribute('data-timer');
+                localStorage.setItem('quizTimerDuration', selectedDuration);
+                updateTimerOptionUI();
+                
+                // If a radio button is already selected, restart the countdown
+                const checkedRadio = document.querySelector('.custom-radio-input:checked');
+                if (checkedRadio && selectedDuration !== 'manual') {
+                    startCountdown();
+                }
+            });
+        });
+        
+        // Add event listeners to radio buttons
+        radioButtons.forEach(radio => {
+            radio.addEventListener('change', function() {
+                if (this.checked && selectedDuration !== 'manual') {
+                    startCountdown();
+                }
+            });
+        });
+        
+        // Cancel countdown
+        cancelButton.addEventListener('click', function(e) {
+            e.preventDefault();
+            stopCountdown();
+        });
+        
+        // Functions
+        function updateTimerOptionUI() {
+            timerOptions.forEach(option => {
+                if (option.getAttribute('data-timer') === selectedDuration) {
+                    option.classList.add('active');
+                } else {
+                    option.classList.remove('active');
+                }
+            });
+        }
+        
+        function startCountdown() {
+            // Stop any existing countdown
+            stopCountdown();
+            
+            // If immediate, submit form right away
+            if (selectedDuration === '0') {
+                form.querySelector('[name="action"]').value = 'next';
+                form.submit();
+                return;
+            }
+            
+            // Set initial time
+            timeLeft = parseInt(selectedDuration);
+            countdownTimer.textContent = timeLeft;
+            
+            // Show countdown
+            countdownContainer.classList.remove('d-none');
+            
+            // Start the countdown
+            countdown = setInterval(function() {
+                timeLeft--;
+                countdownTimer.textContent = timeLeft;
+                
+                if (timeLeft <= 0) {
+                    stopCountdown();
+                    // Submit the form
+                    form.querySelector('[name="action"]').value = 'next';
+                    form.submit();
+                }
+            }, 1000);
+        }
+        
+        function stopCountdown() {
+            // Clear the interval
+            if (countdown) {
+                clearInterval(countdown);
+                countdown = null;
+            }
+            
+            // Hide the countdown
+            countdownContainer.classList.add('d-none');
         }
     });
 </script>
