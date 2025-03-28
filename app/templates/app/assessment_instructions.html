@@ -1,78 +1,138 @@
 {% extends 'base.html' %}
 
-{% block title %}Instructions: {{ quiz.title }} | Quiz App{% endblock %}
+{% block title %}Instructions | {{ quiz.title }}{% endblock %}
 
-{% block og_title %}Instructions: {{ quiz.title }}{% endblock %}
-{% block og_description %}How to complete the {{ quiz.title }}{% endblock %}
+{% block og_title %}Spiritual Gifts Assessment Survey Instructions{% endblock %}
+{% block og_description %}Learn how to complete the Spiritual Gifts Assessment Survey.{% endblock %}
+
+{% block extra_head %}
+<style>
+    .instructions-card {
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        border: none;
+        margin-bottom: 2rem;
+    }
+    
+    .instructions-header {
+        padding: 1.5rem;
+        border-radius: 8px 8px 0 0;
+    }
+    
+    .rating-scale {
+        background-color: var(--bg-light);
+        border-radius: 8px;
+        padding: 20px;
+        margin-bottom: 2rem;
+        border-left: 4px solid var(--primary);
+    }
+    
+    .rating-item {
+        padding: 10px;
+        border-radius: 4px;
+        margin-bottom: 10px;
+        background-color: white;
+        border-left: 3px solid var(--secondary);
+    }
+    
+    .rating-number {
+        font-weight: bold;
+        color: var(--primary);
+        display: inline-block;
+        width: 30px;
+        text-align: center;
+        margin-right: 10px;
+    }
+    
+    .instruction-list li {
+        margin-bottom: 12px;
+        line-height: 1.6;
+    }
+    
+    .instruction-highlight {
+        background-color: var(--secondary-light);
+        padding: 2px 5px;
+        border-radius: 3px;
+    }
+    
+    .start-button {
+        font-size: 1.1rem;
+        padding: 12px 30px;
+        border-radius: 30px;
+    }
+    
+    @keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.05); }
+        100% { transform: scale(1); }
+    }
+    
+    .pulse-animation {
+        animation: pulse 2s infinite;
+    }
+</style>
+{% endblock %}
 
 {% block content %}
 <div class="container">
     <div class="row">
-        <div class="col-md-8 offset-md-2">
-            <div class="card border-primary mb-4">
-                <div class="card-header bg-primary text-white">
-                    <h1 class="h3 mb-0">Spiritual Gifts Assessment Instructions</h1>
+        <div class="col-lg-8 offset-lg-2">
+            <div class="card instructions-card">
+                <div class="card-header instructions-header text-white">
+                    <h1 class="mb-0">{{ quiz.title }}</h1>
                 </div>
-                <div class="card-body">
-                    <div class="alert alert-info mb-4">
-                        <p><i class="fas fa-info-circle"></i> This is not a test, so there are no wrong answers. Please respond honestly to each statement.</p>
+                <div class="card-body p-4">
+                    <div class="mb-4">
+                        <h2>Instructions</h2>
+                        <p class="lead">This survey will help you identify your spiritual gifts. Please read these instructions carefully before beginning.</p>
                     </div>
                     
-                    <h4 class="mb-3">Directions</h4>
-                    <p>The Spiritual Gifts Survey consists of 80 statements. Some items reflect concrete actions, other items are descriptive traits, and still others are statements of belief.</p>
-                    
-                    <ul class="mb-4">
-                        <li>Select the one response you feel best characterizes yourself for each statement.</li>
-                        <li>Do not spend too much time on any one item. Usually your immediate response is best.</li>
-                        <li>You can skip a question if you are truly unsure, but try to answer as many as possible.</li>
-                    </ul>
-                    
-                    <div class="card mb-4">
-                        <div class="card-header">
-                            <h5>Your Response Choices</h5>
+                    <div class="rating-scale mb-4">
+                        <h3 class="mb-3">Response Scale</h3>
+                        <p>For each statement, select the response that best describes you:</p>
+                        
+                        <div class="rating-item">
+                            <span class="rating-number">5</span>
+                            <span>Highly characteristic of me / definitely true for me</span>
                         </div>
-                        <div class="card-body">
-                            <div class="table-responsive">
-                                <table class="table">
-                                    <thead>
-                                        <tr>
-                                            <th>Rating</th>
-                                            <th>What It Means</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td><strong>5</strong></td>
-                                            <td>Highly characteristic of me/definitely true for me</td>
-                                        </tr>
-                                        <tr>
-                                            <td><strong>4</strong></td>
-                                            <td>Most of the time this would describe me/be true for me</td>
-                                        </tr>
-                                        <tr>
-                                            <td><strong>3</strong></td>
-                                            <td>Frequently characteristic of me/true for me – about 50% of the time</td>
-                                        </tr>
-                                        <tr>
-                                            <td><strong>2</strong></td>
-                                            <td>Occasionally characteristic of me/true for me – about 25% of the time</td>
-                                        </tr>
-                                        <tr>
-                                            <td><strong>1</strong></td>
-                                            <td>Not at all characteristic of me/definitely untrue for me</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
+                        
+                        <div class="rating-item">
+                            <span class="rating-number">4</span>
+                            <span>Most of the time this would describe me / be true for me</span>
+                        </div>
+                        
+                        <div class="rating-item">
+                            <span class="rating-number">3</span>
+                            <span>Frequently characteristic of me / true for me — about 50% of the time</span>
+                        </div>
+                        
+                        <div class="rating-item">
+                            <span class="rating-number">2</span>
+                            <span>Occasionally characteristic of me / true for me — about 25% of the time</span>
+                        </div>
+                        
+                        <div class="rating-item">
+                            <span class="rating-number">1</span>
+                            <span>Not at all characteristic of me / definitely untrue for me</span>
                         </div>
                     </div>
                     
-                    <p>After completing the assessment, you'll receive a profile of your spiritual gifts based on your responses. This will help you understand your primary areas of giftedness and how you might serve most effectively.</p>
-                </div>
-                <div class="card-footer">
-                    <div class="d-flex justify-content-between">
-                        <a href="{% url 'home' %}" class="btn btn-outline-secondary">Back to Home</a>
-                        <a href="{% url 'assessment-continue' token %}" class="btn btn-primary">Begin Assessment</a>
+                    <div class="mb-4">
+                        <h3>Important Guidelines</h3>
+                        <ul class="instruction-list">
+                            <li>This is <span class="instruction-highlight">not a test</span>, so there are no wrong answers.</li>
+                            <li>The survey consists of 80 statements that you'll rate on a scale of 1 to 5.</li>
+                            <li>Answer <span class="instruction-highlight">quickly</span> with your first impression — your initial response is often the most accurate.</li>
+                            <li>Please answer <span class="instruction-highlight">every statement</span> based on who you are, not who you would like to be.</li>
+                            <li>Work at your own pace, but try not to overthink your responses.</li>
+                            <li>For each statement, you'll see reflection prompts to help guide your thinking.</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="text-center mt-5">
+                        <a href="{% url 'app:assessment_question' quiz.id %}" class="btn btn-primary btn-lg start-button pulse-animation">
+                            Begin Assessment
+                        </a>
                     </div>
                 </div>
             </div>

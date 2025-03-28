@@ -1,29 +1,29 @@
 <!-- Footer Template -->
-<footer class="site-footer mt-5 py-4 bg-light">
+<footer class="site-footer">
     <div class="container">
         <div class="row">
             <div class="col-md-6">
-                <h5>Quiz App</h5>
-                <p>Test your knowledge with our interactive quizzes.</p>
+                <h5 class="text-primary">Spiritual Gifts Survey</h5>
+                <p class="text-muted">Discover and develop your spiritual gifts through our interactive assessment.</p>
             </div>
             <div class="col-md-3">
-                <h5>Quick Links</h5>
+                <h5 class="text-primary">Quick Links</h5>
                 <ul class="list-unstyled">
-                    <li><a href="{% url 'home' %}">Home</a></li>
+                    <li><a href="{% url 'home' %}" class="text-dark">Home</a></li>
                     <!-- Add more links as needed -->
                 </ul>
             </div>
             <div class="col-md-3">
-                <h5>Contact</h5>
+                <h5 class="text-primary">Contact</h5>
                 <address>
                     <p>Email: contact@example.com</p>
                     <p>Phone: (123) 456-7890</p>
                 </address>
             </div>
         </div>
-        <div class="row mt-3">
+        <div class="row mt-4">
             <div class="col text-center">
-                <p>&copy; {% now "Y" %} Quiz App. All rights reserved.</p>
+                <p class="mb-0">&copy; {% now "Y" %} Spiritual Gifts Survey. All rights reserved.</p>
             </div>
         </div>
     </div>

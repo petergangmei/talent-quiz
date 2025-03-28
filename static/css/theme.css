@@ -1,0 +1,158 @@
+/* 
+ * Custom Theme Colors
+ * Hot Pink: #EF7C8E
+ * Cream: #FAE8E0  
+ * Spearmint: #B6E2D3
+ * Rosewater: #D8A7B1
+ */
+
+:root {
+  /* Primary Colors */
+  --primary: #EF7C8E;    /* Hot Pink - main brand color */
+  --primary-light: #f29daa; /* Lighter shade of primary */
+  --primary-dark: #d46577; /* Darker shade of primary */
+  
+  /* Secondary Colors */
+  --secondary: #B6E2D3;  /* Spearmint - secondary brand color */
+  --secondary-light: #d4f0e6; /* Lighter shade of secondary */
+  --secondary-dark: #98c4b5; /* Darker shade of secondary */
+  
+  /* Accent Colors */
+  --accent: #D8A7B1;     /* Rosewater - accent color */
+  --accent-light: #e5c3ca; /* Lighter shade of accent */
+  --accent-dark: #bb8e97; /* Darker shade of accent */
+  
+  /* Background Colors */
+  --bg-light: #FAE8E0;   /* Cream - light background */
+  --bg-darker: #f5d6ca;  /* Slightly darker background */
+  
+  /* Text Colors */
+  --text-dark: #333333;  /* Dark text on light backgrounds */
+  --text-light: #ffffff; /* Light text on dark backgrounds */
+  --text-muted: #6c757d; /* Muted text color */
+  
+  /* Bootstrap colors (overriding with theme colors) */
+  --bs-primary: var(--primary);
+  --bs-secondary: var(--secondary);
+  --bs-success: #4CAF50;  /* A green that complements our theme */
+  --bs-info: #5bc0de;     /* Light blue */
+  --bs-warning: #f0ad4e;  /* Amber */
+  --bs-danger: #d9534f;   /* Red */
+  --bs-light: var(--bg-light);
+  --bs-dark: #343a40;     /* Dark gray */
+}
+
+/* Background color helper classes */
+.bg-primary {
+  background-color: var(--primary) !important;
+}
+
+.bg-secondary {
+  background-color: var(--secondary) !important;
+}
+
+.bg-accent {
+  background-color: var(--accent) !important;
+}
+
+.bg-light {
+  background-color: var(--bg-light) !important;
+}
+
+.bg-dark {
+  background-color: var(--text-dark) !important;
+}
+
+.bg-success {
+  background-color: var(--bs-success) !important;
+}
+
+.bg-info {
+  background-color: var(--bs-info) !important;
+}
+
+.bg-warning {
+  background-color: var(--bs-warning) !important;
+}
+
+.bg-danger {
+  background-color: var(--bs-danger) !important;
+}
+
+/* Text color helper classes */
+.text-primary {
+  color: var(--primary) !important;
+}
+
+.text-secondary {
+  color: var(--secondary) !important;
+}
+
+.text-accent {
+  color: var(--accent) !important;
+}
+
+.text-light {
+  color: var(--text-light) !important;
+}
+
+.text-dark {
+  color: var(--text-dark) !important;
+}
+
+.text-muted {
+  color: var(--text-muted) !important;
+}
+
+.text-success {
+  color: var(--bs-success) !important;
+}
+
+.text-info {
+  color: var(--bs-info) !important;
+}
+
+.text-warning {
+  color: var(--bs-warning) !important;
+}
+
+.text-danger {
+  color: var(--bs-danger) !important;
+}
+
+/* Border color helper classes */
+.border-primary {
+  border-color: var(--primary) !important;
+}
+
+.border-secondary {
+  border-color: var(--secondary) !important;
+}
+
+.border-accent {
+  border-color: var(--accent) !important;
+}
+
+.border-light {
+  border-color: var(--bg-light) !important;
+}
+
+.border-dark {
+  border-color: var(--text-dark) !important;
+}
+
+.border-success {
+  border-color: var(--bs-success) !important;
+}
+
+.border-info {
+  border-color: var(--bs-info) !important;
+}
+
+.border-warning {
+  border-color: var(--bs-warning) !important;
+}
+
+.border-danger {
+  border-color: var(--bs-danger) !important;
+} 

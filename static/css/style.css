@@ -4,27 +4,45 @@
 .site-header {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     margin-bottom: 1rem;
+    background-color: var(--primary);
+    color: var(--text-light);
 }
 
 /* Footer styles */
 .site-footer {
     margin-top: 3rem;
+    background-color: var(--bg-light);
+    color: var(--text-dark);
+    padding: 2rem 0;
+    border-top: 1px solid var(--primary-light);
 }
 
 /* Quiz card styles */
 .card {
     transition: transform 0.2s ease;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    border-color: var(--secondary-light);
 }
 
 .card:hover {
     transform: translateY(-5px);
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    border-color: var(--secondary);
+}
+
+.card-header {
+    background-color: var(--primary) !important;
+    color: var(--text-light) !important;
 }
 
 /* Quiz detail form */
 .form-check-input {
     cursor: pointer;
+}
+
+.form-check-input:checked {
+    background-color: var(--primary);
+    border-color: var(--primary-dark);
 }
 
 .form-check-label {
@@ -34,16 +52,17 @@
 
 /* Results page */
 .result-title {
-    color: #007bff;
+    color: var(--primary);
     text-align: center;
 }
 
 /* Jumbotron styles */
 .jumbotron {
-    background-color: #f8f9fa;
+    background-color: var(--bg-light);
     padding: 2rem;
     border-radius: 0.5rem;
     margin-bottom: 2rem;
+    border-left: 5px solid var(--accent);
 }
 
 /* Custom spacing */
@@ -52,22 +71,181 @@
 }
 
 /* Custom button styles */
+/* Primary button */
 .btn-primary {
-    background-color: #007bff;
-    border-color: #007bff;
+    background-color: var(--primary);
+    border-color: var(--primary-dark);
+    color: var(--text-light);
 }
 
-.btn-primary:hover {
-    background-color: #0069d9;
-    border-color: #0062cc;
+.btn-primary:hover, .btn-primary:focus, .btn-primary:active {
+    background-color: var(--primary-dark) !important;
+    border-color: var(--primary-dark) !important;
+    color: var(--text-light) !important;
+    box-shadow: 0 0 0 0.2rem rgba(239, 124, 142, 0.25) !important;
 }
 
+/* Secondary button */
+.btn-secondary {
+    background-color: var(--secondary);
+    border-color: var(--secondary-dark);
+    color: var(--text-dark);
+}
+
+.btn-secondary:hover, .btn-secondary:focus, .btn-secondary:active {
+    background-color: var(--secondary-dark) !important;
+    border-color: var(--secondary-dark) !important;
+    color: var(--text-dark) !important;
+    box-shadow: 0 0 0 0.2rem rgba(182, 226, 211, 0.25) !important;
+}
+
+/* Accent button */
+.btn-accent {
+    background-color: var(--accent);
+    border-color: var(--accent-dark);
+    color: var(--text-light);
+}
+
+.btn-accent:hover, .btn-accent:focus, .btn-accent:active {
+    background-color: var(--accent-dark) !important;
+    border-color: var(--accent-dark) !important;
+    color: var(--text-light) !important;
+    box-shadow: 0 0 0 0.2rem rgba(216, 167, 177, 0.25) !important;
+}
+
+/* Success button */
+.btn-success {
+    background-color: var(--bs-success);
+    border-color: var(--bs-success);
+    color: var(--text-light);
+}
+
+.btn-success:hover, .btn-success:focus, .btn-success:active {
+    background-color: #3d8b40 !important;
+    border-color: #3d8b40 !important;
+    color: var(--text-light) !important;
+    box-shadow: 0 0 0 0.2rem rgba(76, 175, 80, 0.25) !important;
+}
+
+/* Outline primary button */
 .btn-outline-primary {
-    color: #007bff;
-    border-color: #007bff;
+    color: var(--primary);
+    border-color: var(--primary);
+    background-color: transparent;
 }
 
-.btn-outline-primary:hover {
-    background-color: #007bff;
-    color: white;
+.btn-outline-primary:hover, .btn-outline-primary:focus, .btn-outline-primary:active {
+    background-color: var(--primary) !important;
+    border-color: var(--primary) !important;
+    color: var(--text-light) !important;
+}
+
+/* Outline secondary button */
+.btn-outline-secondary {
+    color: var(--secondary);
+    border-color: var(--secondary);
+    background-color: transparent;
+}
+
+.btn-outline-secondary:hover, .btn-outline-secondary:focus, .btn-outline-secondary:active {
+    background-color: var(--secondary) !important;
+    border-color: var(--secondary) !important;
+    color: var(--text-dark) !important;
+}
+
+/* Outline accent button */
+.btn-outline-accent {
+    color: var(--accent);
+    border-color: var(--accent);
+    background-color: transparent;
+}
+
+.btn-outline-accent:hover, .btn-outline-accent:focus, .btn-outline-accent:active {
+    background-color: var(--accent) !important;
+    border-color: var(--accent) !important;
+    color: var(--text-light) !important;
+}
+
+/* Custom progress bar */
+.progress-bar {
+    background-color: var(--primary);
+}
+
+/* Custom backgrounds */
+.bg-primary {
+    background-color: var(--primary) !important;
+}
+
+.bg-secondary {
+    background-color: var(--secondary) !important;
+}
+
+.bg-accent {
+    background-color: var(--accent) !important;
+}
+
+.bg-light {
+    background-color: var(--bg-light) !important;
+}
+
+/* Question styling */
+.question-text {
+    font-weight: 600;
+    background-color: var(--bg-light);
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    border-left: 4px solid var(--primary);
+}
+
+.help-text-container {
+    background-color: var(--secondary-light);
+    border-radius: 8px;
+    margin-bottom: 15px;
+    padding: 15px;
+    border-left: 3px solid var(--secondary);
+}
+
+/* Custom radio buttons */
+.custom-radio-circle {
+    background-color: var(--bg-light);
+    border: 2px solid var(--secondary);
+}
+
+.custom-radio-container:hover .custom-radio-circle {
+    border-color: var(--primary);
+    background-color: var(--primary-light);
+}
+
+.custom-radio-input:checked + .custom-radio-circle {
+    background-color: var(--primary);
+    border-color: var(--primary-dark);
+    color: var(--text-light);
+}
+
+/* Timer styling */
+.countdown-timer {
+    color: var(--primary);
+}
+
+.timer-option.active {
+    background-color: var(--primary);
+    color: var(--text-light);
+    border-color: var(--primary-dark);
+}
+
+.timer-option:hover:not(.active) {
+    background-color: var(--primary-light);
+    border-color: var(--primary);
+}
+
+/* Modal styling overrides */
+.modal-header {
+    background-color: var(--primary);
+    color: var(--text-light);
+}
+
+.modal-footer .btn {
+    border-radius: 4px;
+    padding: 8px 16px;
 } 
