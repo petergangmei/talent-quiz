@@ -18,20 +18,25 @@
     .gift-label {
         font-weight: 600;
         margin-bottom: 5px;
+        color: var(--text-light);
+        display: flex;
+        justify-content: space-between;
     }
     
     .gift-score {
         font-weight: bold;
         margin-left: 10px;
+        color: var(--primary);
     }
     
     .gift-description {
-        background-color: var(--bg-light);
+        background-color: var(--bg-darker);
         border-radius: 8px;
         padding: 15px;
         margin-top: 10px;
         margin-bottom: 20px;
-        border-left: 4px solid var(--accent);
+        border-left: 4px solid var(--primary);
+        color: var(--text-light);
     }
     
     .result-title {
@@ -45,16 +50,17 @@
     }
     
     .reflection-section {
-        background-color: var(--secondary-light);
+        background-color: var(--bg-darker);
         border-radius: 8px;
         padding: 20px;
         margin-top: 2rem;
-        border-left: 4px solid var(--secondary);
+        border-left: 4px solid var(--primary);
+        color: var(--text-light);
     }
     
     .reflection-prompt {
         font-style: italic;
-        color: var(--text-dark);
+        color: var(--text-light);
         margin-bottom: 10px;
     }
     
@@ -67,14 +73,58 @@
     
     .interpretation-text {
         line-height: 1.6;
+        color: var(--text-light);
     }
     
     .top-gifts-section {
-        background-color: var(--bg-light);
+        background-color: var(--bg-darker);
         border-radius: 8px;
         padding: 20px;
         margin-bottom: 2rem;
         border: 2px solid var(--primary-light);
+        color: var(--text-light);
+    }
+    
+    .progress {
+        background-color: var(--bg-card);
+        border-radius: 4px;
+        overflow: hidden;
+        height: 25px;
+    }
+    
+    .card {
+        background-color: var(--bg-card);
+        border: none;
+        border-radius: 10px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        overflow: hidden;
+    }
+    
+    .card-header {
+        background-color: var(--bg-darker) !important;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        color: var(--text-light);
+    }
+    
+    .card-body {
+        color: var(--text-light);
+    }
+    
+    .form-control {
+        background-color: var(--bg-card);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        color: var(--text-light);
+    }
+    
+    .form-control::placeholder {
+        color: rgba(255, 255, 255, 0.5);
+    }
+    
+    .form-control:focus {
+        background-color: var(--bg-card);
+        border-color: var(--primary);
+        color: var(--text-light);
+        box-shadow: 0 0 0 0.2rem rgba(228, 124, 142, 0.25);
     }
     
     @keyframes fadeIn {
@@ -106,7 +156,7 @@
                     {% for gift, score in top_gifts.items %}
                     <div class="col-md-4 mb-3">
                         <div class="card h-100 border-primary">
-                            <div class="card-header text-white text-center">
+                            <div class="card-header text-center">
                                 <h5 class="card-title mb-0">{{ gift }}</h5>
                             </div>
                             <div class="card-body">
@@ -120,7 +170,7 @@
             </div>
             
             <div class="card mb-5">
-                <div class="card-header text-white">
+                <div class="card-header">
                     <h4 class="mb-0">Complete Spiritual Gifts Profile</h4>
                 </div>
                 <div class="card-body">
@@ -128,11 +178,11 @@
                     
                     {% for gift, score in gift_scores.items %}
                     <div class="gift-container gift-row" style="--animation-order: {{ forloop.counter }}">
-                        <div class="gift-label d-flex justify-content-between">
+                        <div class="gift-label">
                             <span>{{ gift }}</span>
                             <span class="gift-score">{{ score }}/25</span>
                         </div>
-                        <div class="progress" style="height: 25px;">
+                        <div class="progress">
                             <div class="gift-bar" style="width: {{ score|multiply:4 }}%" aria-valuenow="{{ score }}" aria-valuemin="0" aria-valuemax="25"></div>
                         </div>
                         <div class="gift-description">

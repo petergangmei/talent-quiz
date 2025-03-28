@@ -6,6 +6,12 @@
  * Off White: #F9F9F9
  */
 
+/* Ensure dark theme is enforced by default */
+html, body {
+  background-color: #2F2420;
+  color: #F9F9F9;
+}
+
 :root {
   /* Primary Colors */
   --primary: #E47C8E;    /* Pink - main brand color */
@@ -158,4 +164,18 @@
 
 .border-danger {
   border-color: var(--bs-danger) !important;
+}
+
+/* Additional dark theme overrides for common components */
+.modal-content {
+  background-color: var(--bg-card);
+  color: var(--text-light);
+}
+
+.table {
+  color: var(--text-light);
+}
+
+.table td, .table th {
+  border-color: rgba(255, 255, 255, 0.1);
 } 

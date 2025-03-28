@@ -255,6 +255,24 @@ def quiz_result(request, token):
             
             if interpretation:
                 result_interpretations[category] = interpretation.description
+        
+        # Extract top gifts for display
+        top_gifts = {}
+        for gift in user_quiz.result_data.get('primary_gifts', []):
+            top_gifts[gift['category']] = gift['score']
+        
+        # Get all gift scores
+        gift_scores = user_quiz.result_data.get('scores', {})
+        
+        # Extract gift descriptions from interpretations
+        gift_descriptions = {}
+        for gift, description in result_interpretations.items():
+            gift_descriptions[gift] = description
+        
+        # For any missing descriptions, provide a default
+        for gift in SPIRITUAL_GIFTS_MAPPING.keys():
+            if gift not in gift_descriptions:
+                gift_descriptions[gift] = f"The gift of {gift} - description not available."
                 
         # Render the assessment result template
         return render(request, 'app/assessment_result.html', {
@@ -262,7 +280,10 @@ def quiz_result(request, token):
             'quiz': user_quiz.quiz,
             'result_data': user_quiz.result_data,
             'result_interpretations': result_interpretations,
-            'gift_mapping': SPIRITUAL_GIFTS_MAPPING  # Pass the gift mapping for reference
+            'gift_mapping': SPIRITUAL_GIFTS_MAPPING,  # Pass the gift mapping for reference
+            'top_gifts': top_gifts,
+            'gift_scores': gift_scores,
+            'gift_descriptions': gift_descriptions
         })
     else:
         # Regular quiz result logic - get primary and secondary gift interpretations

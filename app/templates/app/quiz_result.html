@@ -6,13 +6,73 @@
 {% block og_title %}Quiz Results: {{ quiz.title }}{% endblock %}
 {% block og_description %}See your result for the {{ quiz.title }} quiz!{% endblock %}
 
+{% block extra_head %}
+<style>
+    .card {
+        background-color: var(--bg-card);
+        border: none;
+        border-radius: 10px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        overflow: hidden;
+        color: var(--text-light);
+    }
+    
+    .card-header {
+        background-color: var(--bg-darker) !important;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        color: var(--text-light);
+    }
+    
+    .card-body {
+        color: var(--text-light);
+    }
+    
+    .card-footer {
+        background-color: var(--bg-darker);
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .table {
+        color: var(--text-light);
+    }
+    
+    .table-striped tbody tr:nth-of-type(odd) {
+        background-color: rgba(255, 255, 255, 0.05);
+    }
+    
+    .table th, .table td {
+        border-color: rgba(255, 255, 255, 0.1);
+    }
+    
+    .alert-warning {
+        background-color: rgba(240, 173, 78, 0.2);
+        border-color: rgba(240, 173, 78, 0.3);
+        color: #f5e2c6;
+    }
+    
+    .alert-info {
+        background-color: rgba(91, 192, 222, 0.2);
+        border-color: rgba(91, 192, 222, 0.3);
+        color: #d1ecf6;
+    }
+    
+    .display-4 {
+        color: var(--primary);
+    }
+    
+    .lead {
+        color: var(--text-light);
+    }
+</style>
+{% endblock %}
+
 {% block content %}
 <div class="container">
     <div class="row">
         <div class="col-md-8 offset-md-2">
-            <div class="card border-primary mb-4">
-                <div class="card-header bg-primary text-white">
-                    <h1 class="h2 mb-0">Your Results: {{ quiz.title }}</h1>
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h1 class="h2 mb-0 text-primary">Your Results: {{ quiz.title }}</h1>
                 </div>
                 <div class="card-body">
                     {% if result_data.primary_category %}
@@ -27,7 +87,7 @@
                         </div>
 
                         {% if result_data.secondary_gifts %}
-                            <h3 class="mt-4">Secondary Gifts</h3>
+                            <h3 class="mt-4 text-primary">Secondary Gifts</h3>
                             {% for gift in result_data.secondary_gifts %}
                                 <div class="card mb-3">
                                     <div class="card-header">
@@ -42,7 +102,7 @@
                             {% endfor %}
                         {% endif %}
 
-                        <h3 class="mt-4">All Scores</h3>
+                        <h3 class="mt-4 text-primary">All Scores</h3>
                         <div class="table-responsive">
                             <table class="table table-striped">
                                 <thead>
