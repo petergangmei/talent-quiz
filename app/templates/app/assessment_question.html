@@ -119,7 +119,7 @@
                             <button type="submit" name="action" value="skip" class="btn btn-outline-light">
                                 Skip Question
                             </button>
-                            <button type="submit" name="action" value="next" class="btn btn-primary" id="nextButton">
+                            <button type="submit" name="action" value="next" class="btn btn-primary d-none" id="nextButton">
                                 Next Question
                             </button>
                         </div>
@@ -209,18 +209,42 @@
         let selectedDuration = localStorage.getItem('quizTimerDuration') || '-1';
         let timeLeft = parseInt(selectedDuration);
         
-        // Initialize timer option selection
+        console.log('Initial selectedDuration:', selectedDuration);
+        
+        // Initialize timer option selection and button visibility
         updateTimerOptionUI();
+        updateNextButtonVisibility(selectedDuration);
         
         // Add event listeners to timer options
         timerOptions.forEach(option => {
-            option.addEventListener('click', function() {
-                selectedDuration = this.getAttribute('data-seconds');
+            const seconds = option.getAttribute('data-seconds');
+            // Initially highlight the saved option
+            if (seconds === selectedDuration) {
+                option.classList.remove('btn-outline-light');
+                option.classList.add('btn-primary');
+            }
+            
+            option.addEventListener('click', function(e) {
+                e.preventDefault(); // Prevent any default button behavior
+                
+                console.log('Timer option clicked:', seconds);
+                selectedDuration = seconds;
                 localStorage.setItem('quizTimerDuration', selectedDuration);
-                updateTimerOptionUI();
+                
+                // Remove highlight from all options
+                timerOptions.forEach(opt => {
+                    opt.classList.remove('btn-primary');
+                    opt.classList.add('btn-outline-light');
+                });
+                
+                // Add highlight to selected option
+                this.classList.remove('btn-outline-light');
+                this.classList.add('btn-primary');
+                
+                updateNextButtonVisibility(selectedDuration);
                 
                 const checkedRadio = document.querySelector('.custom-radio-input:checked');
-                if (checkedRadio && selectedDuration !== '-1' && selectedDuration !== 'Off') {
+                if (checkedRadio && selectedDuration !== '-1') {
                     startCountdown();
                 }
             });
@@ -228,9 +252,30 @@
         
         // Add event listeners to radio buttons
         radioButtons.forEach(radio => {
+            // Initially style checked radio if exists
+            if (radio.checked) {
+                const circle = radio.nextElementSibling;
+                circle.classList.remove('border-light');
+                circle.classList.add('bg-primary', 'border-primary');
+            }
+            
             radio.addEventListener('change', function() {
-                if (this.checked && selectedDuration !== '-1' && selectedDuration !== 'Off') {
-                    startCountdown();
+                // Remove styling from all radio circles
+                radioButtons.forEach(r => {
+                    const c = r.nextElementSibling;
+                    c.classList.remove('bg-primary', 'border-primary');
+                    c.classList.add('border-light');
+                });
+                
+                // Add styling to selected radio circle
+                if (this.checked) {
+                    const circle = this.nextElementSibling;
+                    circle.classList.remove('border-light');
+                    circle.classList.add('bg-primary', 'border-primary');
+                    
+                    if (selectedDuration !== '-1') {
+                        startCountdown();
+                    }
                 }
             });
         });
@@ -241,17 +286,27 @@
             stopCountdown();
         });
         
-        // Functions
         function updateTimerOptionUI() {
+            console.log('Updating timer UI, selectedDuration:', selectedDuration);
             timerOptions.forEach(option => {
-                if (option.getAttribute('data-seconds') === selectedDuration) {
-                    option.classList.remove('btn-outline-light');
+                const seconds = option.getAttribute('data-seconds');
+                option.classList.remove('btn-primary', 'btn-outline-light');
+                if (seconds === selectedDuration) {
                     option.classList.add('btn-primary');
+                    console.log('Highlighting option:', seconds);
                 } else {
-                    option.classList.remove('btn-primary');
                     option.classList.add('btn-outline-light');
                 }
             });
+        }
+        
+        function updateNextButtonVisibility(duration) {
+            console.log('Updating button visibility, duration:', duration);
+            if (duration === '-1') {
+                nextButton.classList.remove('d-none');
+            } else {
+                nextButton.classList.add('d-none');
+            }
         }
         
         function startCountdown() {
