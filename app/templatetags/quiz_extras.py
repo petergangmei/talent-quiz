@@ -5,7 +5,18 @@ register = template.Library()
 @register.filter
 def get_item(dictionary, key):
     """
-    Custom template filter to access dictionary values by key
-    Usage: {{ my_dict|get_item:key_var }}
+    Gets an item from a dictionary using the key.
+    Usage: {{ dict|get_item:key }}
     """
-    return dictionary.get(key, '') 
+    return dictionary.get(key)
+
+@register.filter
+def multiply(value, arg):
+    """
+    Multiplies the value by the argument.
+    Usage: {{ value|multiply:arg }}
+    """
+    try:
+        return float(value) * float(arg)
+    except (ValueError, TypeError):
+        return 0 

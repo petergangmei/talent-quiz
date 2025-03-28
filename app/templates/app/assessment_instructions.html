@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+
+{% block title %}Instructions: {{ quiz.title }} | Quiz App{% endblock %}
+
+{% block og_title %}Instructions: {{ quiz.title }}{% endblock %}
+{% block og_description %}How to complete the {{ quiz.title }}{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <div class="card border-primary mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h1 class="h3 mb-0">Spiritual Gifts Assessment Instructions</h1>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-info mb-4">
+                        <p><i class="fas fa-info-circle"></i> This is not a test, so there are no wrong answers. Please respond honestly to each statement.</p>
+                    </div>
+                    
+                    <h4 class="mb-3">Directions</h4>
+                    <p>The Spiritual Gifts Survey consists of 80 statements. Some items reflect concrete actions, other items are descriptive traits, and still others are statements of belief.</p>
+                    
+                    <ul class="mb-4">
+                        <li>Select the one response you feel best characterizes yourself for each statement.</li>
+                        <li>Do not spend too much time on any one item. Usually your immediate response is best.</li>
+                        <li>You can skip a question if you are truly unsure, but try to answer as many as possible.</li>
+                    </ul>
+                    
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h5>Your Response Choices</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>Rating</th>
+                                            <th>What It Means</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td><strong>5</strong></td>
+                                            <td>Highly characteristic of me/definitely true for me</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>4</strong></td>
+                                            <td>Most of the time this would describe me/be true for me</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>3</strong></td>
+                                            <td>Frequently characteristic of me/true for me – about 50% of the time</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>2</strong></td>
+                                            <td>Occasionally characteristic of me/true for me – about 25% of the time</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>1</strong></td>
+                                            <td>Not at all characteristic of me/definitely untrue for me</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <p>After completing the assessment, you'll receive a profile of your spiritual gifts based on your responses. This will help you understand your primary areas of giftedness and how you might serve most effectively.</p>
+                </div>
+                <div class="card-footer">
+                    <div class="d-flex justify-content-between">
+                        <a href="{% url 'home' %}" class="btn btn-outline-secondary">Back to Home</a>
+                        <a href="{% url 'assessment-continue' token %}" class="btn btn-primary">Begin Assessment</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

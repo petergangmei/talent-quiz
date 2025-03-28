@@ -1,0 +1,160 @@
+{% extends 'base.html' %}
+
+{% block title %}Question {{ question.order }} of {{ total_questions }} | {{ user_quiz.quiz.title }}{% endblock %}
+
+{% block og_title %}Question {{ question.order }} of {{ total_questions }}{% endblock %}
+{% block og_description %}{{ question.text }}{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <!-- Progress Bar -->
+            <div class="progress mb-4" style="height: 25px;">
+                <div class="progress-bar bg-primary" role="progressbar" style="width: {{ progress }}%;" 
+                     aria-valuenow="{{ progress }}" aria-valuemin="0" aria-valuemax="100">
+                    Question {{ question.order }} of {{ total_questions }}
+                </div>
+            </div>
+            
+            <div class="card mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="card-title mb-0">{{ question.text }}</h5>
+                </div>
+                <div class="card-body">
+                    {% if error %}
+                    <div class="alert alert-danger">
+                        {{ error }}
+                    </div>
+                    {% endif %}
+                    
+                    <form method="post">
+                        {% csrf_token %}
+                        
+                        <div class="rating-scale mb-4">
+                            <div class="row text-center">
+                                <div class="col">
+                                    <strong>Highly<br>characteristic</strong>
+                                </div>
+                                <div class="col">
+                                    <strong>Most of<br>the time</strong>
+                                </div>
+                                <div class="col">
+                                    <strong>Frequently<br>(50%)</strong>
+                                </div>
+                                <div class="col">
+                                    <strong>Occasionally<br>(25%)</strong>
+                                </div>
+                                <div class="col">
+                                    <strong>Not at all<br>characteristic</strong>
+                                </div>
+                            </div>
+                            <div class="row text-center">
+                                <div class="col">
+                                    <h3>5</h3>
+                                </div>
+                                <div class="col">
+                                    <h3>4</h3>
+                                </div>
+                                <div class="col">
+                                    <h3>3</h3>
+                                </div>
+                                <div class="col">
+                                    <h3>2</h3>
+                                </div>
+                                <div class="col">
+                                    <h3>1</h3>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="rating-options d-flex justify-content-between mb-4">
+                            {% for option in question.answer_options.all %}
+                            <div class="rating-option text-center">
+                                <input class="form-check-input" 
+                                       type="radio" 
+                                       name="option" 
+                                       id="option_{{ option.id }}" 
+                                       value="{{ option.id }}"
+                                       {% if existing_response and existing_response.selected_option.id == option.id %}checked{% endif %}>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        
+                        <div class="d-flex justify-content-between mt-4">
+                            <button type="submit" name="action" value="skip" class="btn btn-outline-secondary">
+                                Skip Question
+                            </button>
+                            <button type="submit" name="action" value="next" class="btn btn-primary">
+                                Next Question
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                
+                <div class="card-footer text-muted">
+                    <div class="row">
+                        <div class="col">
+                            <small>Statement {{ question.order }} of 80 | Your progress will be saved automatically.</small>
+                        </div>
+                        <div class="col-auto">
+                            <small>
+                                <a href="#" data-bs-toggle="modal" data-bs-target="#ratingHelpModal">Rating Scale Help</a>
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Rating Scale Help Modal -->
+<div class="modal fade" id="ratingHelpModal" tabindex="-1" aria-labelledby="ratingHelpModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="ratingHelpModalLabel">Rating Scale Help</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Rating</th>
+                                <th>What It Means</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>5</strong></td>
+                                <td>Highly characteristic of me/definitely true for me</td>
+                            </tr>
+                            <tr>
+                                <td><strong>4</strong></td>
+                                <td>Most of the time this would describe me/be true for me</td>
+                            </tr>
+                            <tr>
+                                <td><strong>3</strong></td>
+                                <td>Frequently characteristic of me/true for me – about 50% of the time</td>
+                            </tr>
+                            <tr>
+                                <td><strong>2</strong></td>
+                                <td>Occasionally characteristic of me/true for me – about 25% of the time</td>
+                            </tr>
+                            <tr>
+                                <td><strong>1</strong></td>
+                                <td>Not at all characteristic of me/definitely untrue for me</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

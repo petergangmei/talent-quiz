@@ -1,0 +1,196 @@
+{% extends 'base.html' %}
+{% load quiz_extras %}
+
+{% block title %}Results: {{ quiz.title }} | Quiz App{% endblock %}
+
+{% block og_title %}Your Spiritual Gifts Profile{% endblock %}
+{% block og_description %}See your personalized results for the {{ quiz.title }}{% endblock %}
+
+{% block extra_styles %}
+<style>
+    .gift-bar {
+        height: 25px;
+        background-color: #3498db;
+        border-radius: 3px;
+        margin-bottom: 5px;
+        transition: width 1s ease-in-out;
+    }
+    
+    .gift-label {
+        margin-bottom: 5px;
+        font-weight: bold;
+    }
+    
+    .gift-score {
+        margin-bottom: 5px;
+        text-align: right;
+    }
+    
+    .reflection-textarea {
+        min-height: 100px;
+        margin-bottom: 20px;
+    }
+    
+    .print-only {
+        display: none;
+    }
+    
+    @media print {
+        .no-print {
+            display: none;
+        }
+        
+        .print-only {
+            display: block;
+        }
+        
+        .card {
+            border: none !important;
+            box-shadow: none !important;
+        }
+        
+        .container {
+            width: 100% !important;
+            max-width: 100% !important;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <div class="card border-primary mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h1 class="h2 mb-0">Your Spiritual Gifts Profile</h1>
+                </div>
+                <div class="card-body">
+                    <div class="text-center mb-4">
+                        <h2>{{ user_quiz.user_name }}'s Results</h2>
+                        <p class="text-muted">Completed on {{ user_quiz.created_at|date:"F j, Y" }}</p>
+                    </div>
+                    
+                    <div class="alert alert-info mb-4">
+                        <p><i class="fas fa-info-circle"></i> Your responses have been analyzed to identify your spiritual gifts. The bars below show your score for each gift category (out of a possible 25 points).</p>
+                    </div>
+                    
+                    <!-- Gift Scores Graph -->
+                    <h3 class="mb-3">Your Spiritual Gifts Graph</h3>
+                    <div class="gift-graph-container mb-5">
+                        {% for gift, score in result_data.scores.items %}
+                            <div class="row mb-2 align-items-center">
+                                <div class="col-3 gift-label">{{ gift }}</div>
+                                <div class="col-8">
+                                    <div class="gift-bar" style="width: {{ score|multiply:4 }}%"></div>
+                                </div>
+                                <div class="col-1 gift-score">{{ score }}</div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    
+                    <!-- Primary Gifts Section -->
+                    <h3 class="mb-4">Your Top Spiritual Gifts</h3>
+                    {% for gift in result_data.primary_gifts %}
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <h4>{{ gift.category }} (Score: {{ gift.score }})</h4>
+                            </div>
+                            <div class="card-body">
+                                {% if gift.category in result_interpretations %}
+                                    <p>{{ result_interpretations|get_item:gift.category }}</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% empty %}
+                        <div class="alert alert-warning">
+                            <p>No primary gifts were identified. This could be because you skipped too many questions or the assessment is not configured correctly.</p>
+                        </div>
+                    {% endfor %}
+                    
+                    <!-- Reflection Section -->
+                    <div class="reflection-section mb-4">
+                        <h3 class="mb-3">Reflection Questions</h3>
+                        <p>Take some time to reflect on your results and consider the following questions:</p>
+                        
+                        <div class="card mb-3">
+                            <div class="card-header">
+                                <h5>The gifts I have begun to discover in my life are:</h5>
+                            </div>
+                            <div class="card-body">
+                                <textarea class="form-control reflection-textarea"></textarea>
+                            </div>
+                        </div>
+                        
+                        <div class="card mb-3">
+                            <div class="card-header">
+                                <h5>I believe God wants me to use these gifts in the following ways:</h5>
+                            </div>
+                            <div class="card-body">
+                                <textarea class="form-control reflection-textarea"></textarea>
+                            </div>
+                        </div>
+                        
+                        <div class="card mb-3">
+                            <div class="card-header">
+                                <h5>I commit to develop and use these gifts by:</h5>
+                            </div>
+                            <div class="card-body">
+                                <textarea class="form-control reflection-textarea"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="alert alert-info mt-4">
+                        <p><i class="fas fa-link"></i> Bookmark this page to access your results later. Your results will be available until {{ user_quiz.expires_at|date:"F j, Y" }}.</p>
+                    </div>
+                </div>
+                <div class="card-footer no-print">
+                    <div class="d-flex justify-content-between">
+                        <a href="{% url 'quiz-start' quiz.id %}" class="btn btn-outline-primary">Retake Assessment</a>
+                        <button onclick="window.print()" class="btn btn-outline-secondary">
+                            <i class="fas fa-print"></i> Print Results
+                        </button>
+                        <a href="{% url 'home' %}" class="btn btn-primary">Back to Home</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+    // Template filter implementation for accessing dictionary values by key
+    if (!window.filters) {
+        window.filters = {};
+    }
+    
+    window.filters.get_item = function(dictionary, key) {
+        return dictionary[key];
+    };
+    
+    // Register custom template filter
+    if (typeof django !== 'undefined' && django.template) {
+        django.template.defaultfilters.get_item = window.filters.get_item;
+    }
+    
+    // Animate gift bars on page load
+    document.addEventListener('DOMContentLoaded', function() {
+        // Delay animation slightly for better effect
+        setTimeout(function() {
+            const bars = document.querySelectorAll('.gift-bar');
+            bars.forEach(function(bar) {
+                // Get the target width from inline style
+                const targetWidth = bar.style.width;
+                // Set initial width to 0 and then animate to target
+                bar.style.width = '0%';
+                setTimeout(function() {
+                    bar.style.width = targetWidth;
+                }, 100);
+            });
+        }, 300);
+    });
+</script>
+{% endblock %} 
