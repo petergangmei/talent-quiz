@@ -1,45 +1,40 @@
 /* 
  * Custom Theme Colors
- * Hot Pink: #EF7C8E
- * Cream: #FAE8E0  
- * Spearmint: #B6E2D3
- * Rosewater: #D8A7B1
+ * Pink: #E47C8E
+ * Dark Brown: #2F2420  
+ * Light Pink: #F2A2B0
+ * Off White: #F9F9F9
  */
 
 :root {
   /* Primary Colors */
-  --primary: #EF7C8E;    /* Hot Pink - main brand color */
-  --primary-light: #f29daa; /* Lighter shade of primary */
-  --primary-dark: #d46577; /* Darker shade of primary */
-  
-  /* Secondary Colors */
-  --secondary: #B6E2D3;  /* Spearmint - secondary brand color */
-  --secondary-light: #d4f0e6; /* Lighter shade of secondary */
-  --secondary-dark: #98c4b5; /* Darker shade of secondary */
-  
-  /* Accent Colors */
-  --accent: #D8A7B1;     /* Rosewater - accent color */
-  --accent-light: #e5c3ca; /* Lighter shade of accent */
-  --accent-dark: #bb8e97; /* Darker shade of accent */
+  --primary: #E47C8E;    /* Pink - main brand color */
+  --primary-light: #F2A2B0; /* Lighter shade of primary */
+  --primary-dark: #C06070; /* Darker shade of primary */
   
   /* Background Colors */
-  --bg-light: #FAE8E0;   /* Cream - light background */
-  --bg-darker: #f5d6ca;  /* Slightly darker background */
+  --bg-dark: #2F2420;    /* Dark Brown - main background */
+  --bg-darker: #231C18;  /* Slightly darker background */
+  --bg-card: #3A2E29;    /* Slightly lighter brown for cards */
+  
+  /* Accent Colors */
+  --accent: #FAE8E0;     /* Off-white accent */
+  --accent-dark: #E6D4CC; /* Slightly darker accent */
   
   /* Text Colors */
   --text-dark: #333333;  /* Dark text on light backgrounds */
-  --text-light: #ffffff; /* Light text on dark backgrounds */
-  --text-muted: #6c757d; /* Muted text color */
+  --text-light: #F9F9F9; /* Light text on dark backgrounds */
+  --text-muted: #A7978F; /* Muted text color */
   
   /* Bootstrap colors (overriding with theme colors) */
   --bs-primary: var(--primary);
-  --bs-secondary: var(--secondary);
+  --bs-secondary: var(--bg-card);
   --bs-success: #4CAF50;  /* A green that complements our theme */
   --bs-info: #5bc0de;     /* Light blue */
   --bs-warning: #f0ad4e;  /* Amber */
   --bs-danger: #d9534f;   /* Red */
-  --bs-light: var(--bg-light);
-  --bs-dark: #343a40;     /* Dark gray */
+  --bs-light: var(--accent);
+  --bs-dark: var(--bg-dark);
 }
 
 /* Background color helper classes */
@@ -48,7 +43,19 @@
 }
 
 .bg-secondary {
-  background-color: var(--secondary) !important;
+  background-color: var(--bg-card) !important;
+}
+
+.bg-dark {
+  background-color: var(--bg-dark) !important;
+}
+
+.bg-darker {
+  background-color: var(--bg-darker) !important;
+}
+
+.bg-card {
+  background-color: var(--bg-card) !important;
 }
 
 .bg-accent {
@@ -56,11 +63,7 @@
 }
 
 .bg-light {
-  background-color: var(--bg-light) !important;
-}
-
-.bg-dark {
-  background-color: var(--text-dark) !important;
+  background-color: var(--accent) !important;
 }
 
 .bg-success {
@@ -85,7 +88,7 @@
 }
 
 .text-secondary {
-  color: var(--secondary) !important;
+  color: var(--bg-card) !important;
 }
 
 .text-accent {
@@ -126,7 +129,7 @@
 }
 
 .border-secondary {
-  border-color: var(--secondary) !important;
+  border-color: var(--bg-card) !important;
 }
 
 .border-accent {
@@ -134,11 +137,11 @@
 }
 
 .border-light {
-  border-color: var(--bg-light) !important;
+  border-color: var(--accent) !important;
 }
 
 .border-dark {
-  border-color: var(--text-dark) !important;
+  border-color: var(--bg-dark) !important;
 }
 
 .border-success {

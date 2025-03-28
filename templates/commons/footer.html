@@ -1,5 +1,5 @@
 <!-- Footer Template -->
-<footer class="site-footer">
+<footer class="site-footer py-4 bg-darker mt-5">
     <div class="container">
         <div class="row">
             <div class="col-md-6">
@@ -9,13 +9,13 @@
             <div class="col-md-3">
                 <h5 class="text-primary">Quick Links</h5>
                 <ul class="list-unstyled">
-                    <li><a href="{% url 'home' %}" class="text-dark">Home</a></li>
+                    <li><a href="{% url 'home' %}" class="text-light">Home</a></li>
                     <!-- Add more links as needed -->
                 </ul>
             </div>
             <div class="col-md-3">
                 <h5 class="text-primary">Contact</h5>
-                <address>
+                <address class="text-muted">
                     <p>Email: contact@example.com</p>
                     <p>Phone: (123) 456-7890</p>
                 </address>
@@ -23,7 +23,7 @@
         </div>
         <div class="row mt-4">
             <div class="col text-center">
-                <p class="mb-0">&copy; {% now "Y" %} Spiritual Gifts Survey. All rights reserved.</p>
+                <p class="mb-0 text-muted">&copy; {% now "Y" %} Spiritual Gifts Survey. All rights reserved.</p>
             </div>
         </div>
     </div>

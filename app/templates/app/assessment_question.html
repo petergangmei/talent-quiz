@@ -7,6 +7,40 @@
 
 {% block extra_head %}
 <style>
+    body {
+        background-color: var(--bg-dark);
+        color: var(--text-light);
+    }
+
+    .container {
+        padding-top: 30px;
+        padding-bottom: 30px;
+    }
+
+    .card {
+        background-color: var(--bg-card);
+        border: none;
+        border-radius: 10px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        overflow: hidden;
+    }
+
+    .card-header {
+        background-color: var(--bg-darker);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        color: var(--text-light);
+    }
+
+    .card-body {
+        padding: 25px;
+    }
+
+    .card-footer {
+        background-color: var(--bg-darker);
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        color: var(--text-muted);
+    }
+
     /* Custom radio button styling */
     .custom-radio-container {
         display: block;
@@ -31,23 +65,27 @@
         width: 50px;
         border-radius: 50%;
         margin: 0 auto;
+        border: 2px solid rgba(255, 255, 255, 0.2);
         transition: all 0.2s ease;
+        background-color: rgba(255, 255, 255, 0.05);
     }
     
     .custom-radio-container:hover .custom-radio-circle {
         border-color: var(--primary);
-        background-color: var(--primary-light);
+        background-color: rgba(228, 124, 142, 0.2);
     }
     
     .custom-radio-input:checked + .custom-radio-circle {
         background-color: var(--primary);
         border-color: var(--primary-dark);
         color: var(--text-light);
+        box-shadow: 0 0 10px rgba(228, 124, 142, 0.5);
     }
     
     .rating-number {
         font-size: 22px;
         font-weight: bold;
+        color: var(--text-light);
     }
     
     .rating-column {
@@ -63,6 +101,23 @@
         min-height: 40px;
         display: flex;
         align-items: center;
+        color: var(--text-light);
+    }
+
+    /* Progress bar styling */
+    .progress {
+        height: 25px;
+        background-color: var(--bg-card);
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2);
+    }
+
+    .progress-bar {
+        background-color: var(--primary);
+        color: var(--text-light);
+        font-weight: bold;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
     }
     
     /* Countdown timer styling */
@@ -71,6 +126,11 @@
         align-items: center;
         justify-content: center;
         margin-top: 15px;
+        color: var(--text-light);
+        background-color: var(--bg-darker);
+        padding: 10px;
+        border-radius: 20px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
     }
     
     .countdown-timer {
@@ -79,6 +139,7 @@
         margin-left: 10px;
         min-width: 40px;
         text-align: center;
+        color: var(--primary);
     }
     
     .countdown-text {
@@ -91,56 +152,82 @@
         100% { opacity: 1; }
     }
     
+    /* Timer settings styling */
     .timer-settings {
-        border-radius: 8px;
-        padding: 15px;
+        border-radius: 10px;
+        padding: 20px;
         margin-bottom: 20px;
+        background-color: var(--bg-darker);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .timer-settings-header {
+        font-weight: 600;
+        color: var(--text-light);
+        margin-bottom: 15px;
+    }
+    
+    .timer-options-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        justify-content: center;
     }
     
     .timer-option {
         cursor: pointer;
-        padding: 5px 10px;
-        border-radius: 4px;
-        margin-right: 5px;
-        border: 1px solid var(--secondary-light);
+        padding: 8px 15px;
+        border-radius: 25px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
         transition: all 0.2s ease;
+        text-align: center;
+        min-width: 80px;
+        font-weight: 500;
+        background-color: var(--bg-card);
+        color: var(--text-light);
     }
     
     .timer-option.active {
         background-color: var(--primary);
         color: var(--text-light);
         border-color: var(--primary-dark);
+        box-shadow: 0 2px 8px rgba(228, 124, 142, 0.5);
     }
     
     .timer-option:hover:not(.active) {
-        background-color: var(--primary-light);
+        background-color: rgba(228, 124, 142, 0.2);
         border-color: var(--primary);
     }
     
     /* Help text styling */
     .question-text {
         font-weight: 600;
-        background-color: var(--bg-light);
-        padding: 15px;
-        border-radius: 8px;
-        margin-bottom: 15px;
+        background-color: var(--bg-darker);
+        padding: 20px;
+        border-radius: 10px;
+        margin-bottom: 20px;
         border-left: 4px solid var(--primary);
+        color: var(--text-light);
+        font-size: 1.1rem;
+        line-height: 1.5;
     }
     
     .help-text-container {
-        background-color: var(--secondary-light);
-        border-radius: 8px;
-        margin-bottom: 15px;
-        padding: 15px;
-        border-left: 3px solid var(--secondary);
+        background-color: rgba(255, 255, 255, 0.05);
+        border-radius: 10px;
+        margin-bottom: 20px;
+        padding: 20px;
+        border-left: 3px solid var(--primary-light);
         display: block; /* Visible by default */
     }
     
     .help-text-item {
         margin-bottom: 15px;
         position: relative;
-        padding-left: 20px;
-        border-left: 2px solid var(--secondary);
+        padding-left: 25px;
+        border-left: 2px solid rgba(228, 124, 142, 0.3);
+        padding-top: 5px;
+        padding-bottom: 5px;
     }
     
     .help-text-item:last-child {
@@ -148,33 +235,104 @@
     }
     
     .help-text {
-        color: var(--text-dark);
-        font-size: 0.9rem;
+        color: var(--text-light);
+        font-size: 0.95rem;
         margin-bottom: 0;
+        line-height: 1.5;
     }
     
     /* Additional help text styling */
     .help-text-header {
         margin-bottom: 15px;
-        font-size: 1rem;
-        border-bottom: 1px solid var(--secondary);
-        padding-bottom: 8px;
+        font-size: 1.1rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        padding-bottom: 10px;
+        color: var(--primary-light);
     }
     
     .help-number {
         display: inline-block;
-        width: 20px;
-        height: 20px;
-        line-height: 20px;
+        width: 24px;
+        height: 24px;
+        line-height: 24px;
         text-align: center;
-        background-color: var(--secondary);
-        color: var(--text-dark);
+        background-color: var(--primary);
+        color: var(--text-light);
         border-radius: 50%;
         margin-right: 10px;
         font-weight: bold;
         position: absolute;
-        left: -10px;
-        top: 0;
+        left: -12px;
+        top: 5px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Button styling */
+    .btn-primary {
+        background-color: var(--primary);
+        border-color: var(--primary-dark);
+        color: white;
+        font-weight: 500;
+        border-radius: 25px;
+        padding: 8px 20px;
+        transition: all 0.2s ease;
+    }
+
+    .btn-primary:hover {
+        background-color: var(--primary-dark);
+        border-color: var(--primary-dark);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .btn-outline-secondary {
+        color: var(--text-light);
+        border-color: rgba(255, 255, 255, 0.2);
+        border-radius: 25px;
+        padding: 8px 20px;
+        transition: all 0.2s ease;
+    }
+
+    .btn-outline-secondary:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+        color: var(--text-light);
+        border-color: rgba(255, 255, 255, 0.3);
+    }
+
+    /* Alert styling */
+    .alert-danger {
+        background-color: rgba(217, 83, 79, 0.2);
+        border-color: rgba(217, 83, 79, 0.3);
+        color: #f8d7da;
+        border-radius: 10px;
+        padding: 15px;
+        margin-bottom: 20px;
+        position: relative;
+    }
+
+    /* Modal styling */
+    .modal-content {
+        background-color: var(--bg-card);
+        color: var(--text-light);
+        border: none;
+        border-radius: 10px;
+    }
+
+    .modal-header {
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        background-color: var(--bg-darker);
+    }
+
+    .modal-footer {
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        background-color: var(--bg-darker);
+    }
+
+    .table {
+        color: var(--text-light);
+    }
+
+    .table th, .table td {
+        border-color: rgba(255, 255, 255, 0.1);
     }
 </style>
 {% endblock %}
@@ -230,14 +388,14 @@
                     </div>
                     
                     <!-- Timer Settings -->
-                    <div class="timer-settings bg-light">
-                        <p class="mb-2"><strong>Set Reflection Timer:</strong></p>
-                        <div class="d-flex flex-wrap">
-                            <div class="timer-option" data-seconds="30">30s</div>
-                            <div class="timer-option" data-seconds="60">1m</div>
-                            <div class="timer-option" data-seconds="120">2m</div>
-                            <div class="timer-option" data-seconds="300">5m</div>
-                            <div class="timer-option" data-seconds="0">Off</div>
+                    <div class="timer-settings">
+                        <h5 class="timer-settings-header">Set Reflection Timer:</h5>
+                        <div class="timer-options-container">
+                            <div class="timer-option" data-seconds="0">Immediate</div>
+                            <div class="timer-option" data-seconds="3">3s</div>
+                            <div class="timer-option" data-seconds="5">5s</div>
+                            <div class="timer-option" data-seconds="10">10s</div>
+                            <div class="timer-option" data-seconds="-1">Off</div>
                         </div>
                     </div>
                     
@@ -325,7 +483,7 @@
                         </div>
                         <div class="col-auto">
                             <small>
-                                <a href="#" data-toggle="modal" data-target="#ratingHelpModal">Rating Scale Help</a>
+                                <a href="#" data-toggle="modal" data-target="#ratingHelpModal" class="text-primary">Rating Scale Help</a>
                             </small>
                         </div>
                     </div>
@@ -342,7 +500,7 @@
             <div class="modal-header">
                 <h5 class="modal-title" id="ratingHelpModalLabel">Rating Scale Help</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
+                    <span aria-hidden="true" class="text-light">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
@@ -380,7 +538,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
             </div>
         </div>
     </div>
@@ -407,7 +565,7 @@
         
         // COUNTDOWN TIMER FUNCTIONALITY
         let countdown = null;
-        let selectedDuration = localStorage.getItem('quizTimerDuration') || 'manual';
+        let selectedDuration = localStorage.getItem('quizTimerDuration') || '-1'; // Default to Off
         let timeLeft = parseInt(selectedDuration);
         
         // Initialize timer option selection
@@ -422,7 +580,7 @@
                 
                 // If a radio button is already selected, restart the countdown
                 const checkedRadio = document.querySelector('.custom-radio-input:checked');
-                if (checkedRadio && selectedDuration !== '0') {
+                if (checkedRadio && selectedDuration !== '-1' && selectedDuration !== 'Off') {
                     startCountdown();
                 }
             });
@@ -431,7 +589,7 @@
         // Add event listeners to radio buttons
         radioButtons.forEach(radio => {
             radio.addEventListener('change', function() {
-                if (this.checked && selectedDuration !== '0') {
+                if (this.checked && selectedDuration !== '-1' && selectedDuration !== 'Off') {
                     startCountdown();
                 }
             });
@@ -462,6 +620,11 @@
             if (selectedDuration === '0') {
                 form.querySelector('[name="action"]').value = 'next';
                 form.submit();
+                return;
+            }
+            
+            // If Off, do nothing
+            if (selectedDuration === '-1') {
                 return;
             }
             
