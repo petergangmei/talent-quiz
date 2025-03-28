@@ -376,21 +376,23 @@
         
         // Use sendBeacon for reliable background submission during navigation
         function sendDataInBackground(submissionData) {
+            // Include the CSRF token in the data itself instead of URL parameters
+            const payload = {
+                ...submissionData.data,
+                csrfmiddlewaretoken: csrfToken,
+                submission_id: submissionData.id,
+                is_beacon: true
+            };
+            
             // Create a blob with the submission data
-            const blob = new Blob([JSON.stringify(submissionData.data)], {
+            const blob = new Blob([JSON.stringify(payload)], {
                 type: 'application/json'
             });
-            
-            // Add CSRF token to URL as a query parameter for security
-            const url = new URL(submissionData.url);
-            url.searchParams.append('csrftoken', csrfToken);
-            url.searchParams.append('submission_id', submissionData.id);
-            url.searchParams.append('is_beacon', 'true');
             
             // Try sendBeacon first (most reliable during page navigation)
             if (navigator.sendBeacon) {
                 try {
-                    const success = navigator.sendBeacon(url.toString(), blob);
+                    const success = navigator.sendBeacon(submissionData.url, blob);
                     return success;
                 } catch (error) {
                     console.error('SendBeacon error:', error);
@@ -401,7 +403,7 @@
             try {
                 fetch(submissionData.url, {
                     method: 'POST',
-                    body: JSON.stringify(submissionData.data),
+                    body: JSON.stringify(payload),
                     headers: {
                         'X-CSRFToken': csrfToken,
                         'X-Requested-With': 'XMLHttpRequest',

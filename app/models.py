@@ -84,6 +84,11 @@ class UserQuiz(models.Model):
     expires_at = models.DateTimeField()
     result_data = models.JSONField(default=dict, blank=True)  # Stores the calculated results
     
+    # Reflection fields
+    reflection_1 = models.TextField(blank=True, null=True)
+    reflection_2 = models.TextField(blank=True, null=True)
+    reflection_3 = models.TextField(blank=True, null=True)
+    
     def save(self, *args, **kwargs):
         """Set expiry date to 30 days from creation if not already set."""
         if not self.expires_at:
@@ -92,6 +97,11 @@ class UserQuiz(models.Model):
     
     def __str__(self):
         return f"{self.user_name}'s attempt at {self.quiz.title}"
+    
+    @property
+    def token(self):
+        """Property to access token field using the new name."""
+        return self.access_token
     
     @property
     def is_expired(self):

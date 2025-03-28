@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from django.http import JsonResponse, Http404
+from django.http import JsonResponse, Http404, HttpResponse
 from django.views.decorators.http import require_POST
 from django.urls import reverse
 from django.utils import timezone
@@ -17,90 +17,115 @@ def home(request):
 @conditional_csrf_exempt
 def quiz_start(request, quiz_id):
     """
-    Display form to collect user name before starting the quiz.
+    Start a quiz and redirect to the first question.
     """
     quiz = get_object_or_404(Quiz, id=quiz_id)
     
+    # Create a new UserQuiz instance
+    client_ip = get_client_ip(request)
+    
     if request.method == 'POST':
-        user_name = request.POST.get('user_name', '').strip()
+        user_name = request.POST.get('user_name', '')
         if not user_name:
-            return render(request, 'app/quiz_start.html', {
-                'quiz': quiz,
-                'error': 'Please enter your name to start the quiz.'
-            })
+            user_name = f"Anonymous User {client_ip}"
         
-        # Create a new UserQuiz instance
+        # Create UserQuiz and start with question 1
         user_quiz = UserQuiz.objects.create(
             quiz=quiz,
             user_name=user_name,
-            ip_address=get_client_ip(request),
-            current_question=1
+            ip_address=client_ip,
+            current_question=1,
+            is_completed=False
         )
         
-        # For the assessment, show instructions page first
-        if "assessment" in quiz.title.lower():
-            return render(request, 'app/assessment_instructions.html', {
-                'user_quiz': user_quiz,
-                'quiz': quiz,
-                'token': user_quiz.access_token
-            })
+        # After creating the user_quiz, pass the token for question routing
+        context = {
+            'quiz': quiz,
+            'token': user_quiz.token
+        }
         
         # Redirect to the first question
-        return redirect('quiz-question', token=user_quiz.access_token)
+        return redirect('app:quiz-question', token=user_quiz.token)
     
+    # Show the quiz start form (GET request)
     return render(request, 'app/quiz_start.html', {'quiz': quiz})
 
 @conditional_csrf_exempt
 def quiz_question(request, token):
     """
-    Display a single question from the quiz and handle responses.
+    Display a question and handle user responses.
     """
-    user_quiz = get_object_or_404(UserQuiz, access_token=token)
+    # Get the UserQuiz instance using the token
+    user_quiz = get_object_or_404(UserQuiz, token=token)
     
-    # Check if quiz is already completed
-    if user_quiz.is_completed:
-        return redirect('quiz-result', token=token)
-    
-    # Check if quiz is expired
+    # Check if the quiz is expired
     if user_quiz.is_expired:
-        return render(request, 'app/quiz_expired.html', {'user_quiz': user_quiz})
+        return HttpResponse("This quiz link has expired.", status=403)
     
-    # Get the current question
+    # Prevent access if already completed
+    if user_quiz.is_completed:
+        return redirect('app:quiz-result', token=token)
+        
+    # Get the current question based on UserQuiz.current_question
     try:
-        current_question = user_quiz.quiz.questions.get(order=user_quiz.current_question)
+        # Use order field for question sequence (1-based index)
+        question = Question.objects.get(quiz=user_quiz.quiz, order=user_quiz.current_question)
     except Question.DoesNotExist:
-        # If current_question exceeds the number of questions, mark as completed and show results
+        # If we can't find the question, mark as completed and show results
         user_quiz.is_completed = True
         user_quiz.save()
-        return redirect('quiz-result', token=token)
+        
+        # Calculate results before showing
+        calculate_results(user_quiz)
+        
+        return redirect('app:quiz-result', token=token)
     
     # Handle form submission
     if request.method == 'POST':
-        action = request.POST.get('action', '')
+        # Check if this is a JSON request (from sendBeacon)
+        if request.content_type and 'application/json' in request.content_type:
+            try:
+                # Parse JSON data
+                import json
+                data = json.loads(request.body)
+                action = data.get('action', '')
+                option_id = data.get('option', None)
+                
+                # Add CSRF exemption for beacon requests that include the is_beacon flag
+                if not data.get('is_beacon'):
+                    return HttpResponse("CSRF verification failed", status=403)
+                
+            except json.JSONDecodeError:
+                return HttpResponse("Invalid JSON", status=400)
+        else:
+            # Regular form submission
+            action = request.POST.get('action', '')
+            option_id = request.POST.get('option', None)
         
+        # Process the submission
         if action == 'skip':
             # Handle skipped question
             UserResponse.objects.update_or_create(
                 user_quiz=user_quiz,
-                question=current_question,
+                question=question,
                 defaults={'is_skipped': True, 'selected_option': None}
             )
         else:
             # Handle answered question
-            option_id = request.POST.get('option')
             if option_id:
-                selected_option = get_object_or_404(AnswerOption, id=option_id, question=current_question)
+                selected_option = get_object_or_404(AnswerOption, id=option_id, question=question)
                 UserResponse.objects.update_or_create(
                     user_quiz=user_quiz,
-                    question=current_question,
+                    question=question,
                     defaults={'selected_option': selected_option, 'is_skipped': False}
                 )
             else:
                 # If no option selected and not skipping, show error
-                if action != 'skip':
-                    return render(request, 'app/quiz_question.html', {
+                # Only show error for regular form submissions, not beacon requests
+                if action != 'skip' and not request.content_type or 'application/json' not in request.content_type:
+                    return render(request, 'app/assessment_question.html', {
                         'user_quiz': user_quiz,
-                        'question': current_question,
+                        'question': question,
                         'error': 'Please select an option or skip this question.'
                     })
         
@@ -113,13 +138,22 @@ def quiz_question(request, token):
             user_quiz.is_completed = True
             calculate_results(user_quiz)
             user_quiz.save()
-            return redirect('quiz-result', token=token)
+            
+            # For beacon requests, return a simple success response
+            if request.content_type and 'application/json' in request.content_type:
+                return JsonResponse({'status': 'success', 'next': 'result'})
+                
+            return redirect('app:quiz-result', token=token)
         
+        # For beacon requests, return a simple success response
+        if request.content_type and 'application/json' in request.content_type:
+            return JsonResponse({'status': 'success', 'next': 'question'})
+            
         # Redirect to the next question
-        return redirect('quiz-question', token=token)
+        return redirect('app:quiz-question', token=token)
     
     # Check if this question has already been answered
-    existing_response = UserResponse.objects.filter(user_quiz=user_quiz, question=current_question).first()
+    existing_response = UserResponse.objects.filter(user_quiz=user_quiz, question=question).first()
     
     # Get total questions for progress calculation
     total_questions = user_quiz.quiz.questions.count()
@@ -132,7 +166,7 @@ def quiz_question(request, token):
     if is_assessment:
         return render(request, 'app/assessment_question.html', {
             'user_quiz': user_quiz,
-            'question': current_question,
+            'question': question,
             'existing_response': existing_response,
             'total_questions': total_questions,
             'progress': progress
@@ -141,7 +175,7 @@ def quiz_question(request, token):
     # Regular quiz template
     return render(request, 'app/quiz_question.html', {
         'user_quiz': user_quiz,
-        'question': current_question,
+        'question': question,
         'existing_response': existing_response,
         'total_questions': total_questions,
         'progress': progress
@@ -218,27 +252,28 @@ def calculate_results(user_quiz):
 
 def quiz_result(request, token):
     """
-    Display the quiz results.
+    Display quiz results for a user.
     """
-    user_quiz = get_object_or_404(UserQuiz, access_token=token)
+    # Get the user quiz instance
+    user_quiz = get_object_or_404(UserQuiz, token=token)
     
-    # If the quiz is not completed, redirect to the current question
-    if not user_quiz.is_completed:
-        return redirect('quiz-question', token=token)
+    # If the quiz hasn't been completed, redirect to continue
+    if not user_quiz.is_completed and user_quiz.current_question <= user_quiz.quiz.questions.count():
+        return redirect('app:quiz-question', token=token)
     
+    # Force calculation if no results found
+    if not user_quiz.result_data:
+        calculate_results(user_quiz)
+
+    # Initialize dictionary to store interpretations based on scores
+    result_interpretations = {}
+
     # Check if quiz is expired
     if user_quiz.is_expired:
         return render(request, 'app/quiz_expired.html', {'user_quiz': user_quiz})
     
-    # Calculate results if not already done
-    if not user_quiz.result_data:
-        calculate_results(user_quiz)
-    
     # Check if this is the assessment or regular quiz
     is_assessment = user_quiz.result_data.get('is_assessment', False)
-    
-    # Get interpretations for gifts
-    result_interpretations = {}
     
     if is_assessment:
         # For assessment, get interpretations for top gifts
