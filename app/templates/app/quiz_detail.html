@@ -29,15 +29,15 @@
                     </div>
                     
                     <div class="text-center mt-4">
-                        <a href="{% url 'quiz-start' quiz.id %}" class="btn btn-primary btn-lg">Start Quiz</a>
-                        <a href="{% url 'home' %}" class="btn btn-outline-secondary ml-2">Back to Home</a>
+                        <a href="{% url 'app:quiz-start' quiz.id %}" class="btn btn-primary btn-lg">Start Quiz</a>
+                        <a href="{% url 'app:home' %}" class="btn btn-outline-secondary ml-2">Back to Home</a>
                     </div>
                 </div>
                 {% else %}
                 <div class="card-body">
                     <div class="text-center">
-                        <a href="{% url 'quiz-start' quiz.id %}" class="btn btn-primary btn-lg">Start Quiz</a>
-                        <a href="{% url 'home' %}" class="btn btn-outline-secondary ml-2">Back to Home</a>
+                        <a href="{% url 'app:quiz-start' quiz.id %}" class="btn btn-primary btn-lg">Start Quiz</a>
+                        <a href="{% url 'app:home' %}" class="btn btn-outline-secondary ml-2">Back to Home</a>
                     </div>
                 </div>
                 {% endif %}

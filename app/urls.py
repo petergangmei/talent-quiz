@@ -1,6 +1,8 @@
 from django.urls import path
 from .views import home, quiz_detail, quiz_submit, quiz_start, quiz_question, quiz_result, assessment_continue
 
+# Register the app namespace
+app_name = 'app'
 
 urlpatterns = [
     path('', home, name='home'),

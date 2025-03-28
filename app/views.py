@@ -370,10 +370,10 @@ def quiz_submit(request, quiz_id):
     """
     Legacy quiz submission handler - redirects to quiz_start.
     """
-    return redirect('quiz-start', quiz_id=quiz_id)
+    return redirect('app:quiz-start', quiz_id=quiz_id)
 
 def assessment_continue(request, token):
     """
     Handler for continuing from assessment instructions to the first question.
     """
-    return redirect('quiz-question', token=token)
+    return redirect('app:quiz-question', token=token)

@@ -22,4 +22,4 @@ urlpatterns = [
 ]
 
 from django.urls import include
-urlpatterns += [path('', include('app.urls'))]
+urlpatterns += [path('', include('app.urls', namespace='app'))]

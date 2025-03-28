@@ -22,8 +22,8 @@
                     </div>
                     
                     <div class="mt-4">
-                        <a href="{% url 'quiz-start' user_quiz.quiz.id %}" class="btn btn-primary">Start New Attempt</a>
-                        <a href="{% url 'home' %}" class="btn btn-outline-secondary ml-2">Back to Home</a>
+                        <a href="{% url 'app:quiz-start' user_quiz.quiz.id %}" class="btn btn-primary">Start New Attempt</a>
+                        <a href="{% url 'app:home' %}" class="btn btn-outline-secondary ml-2">Back to Home</a>
                     </div>
                 </div>
                 <div class="card-footer text-muted">

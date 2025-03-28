@@ -1107,3 +1107,415 @@ Traceback (most recent call last):
     raise NoReverseMatch("%s is not a registered namespace" % key)
 django.urls.exceptions.NoReverseMatch: 'app' is not a registered namespace
 ERROR 2025-03-28 11:06:04,345 basehttp 53286 6158151680 "POST /quiz/1/start/ HTTP/1.1" 500 96001
+ERROR 2025-03-28 11:07:59,824 log 53889 6122516480 Internal Server Error: /quiz/question/c459e810-69f2-46e4-8450-12c20fff1452/
+Traceback (most recent call last):
+  File "/Users/petergangmei/Developer/Projects/django/quiz /venv/lib/python3.13/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/Users/petergangmei/Developer/Projects/django/quiz /venv/lib/python3.13/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/Users/petergangmei/Developer/Projects/django/quiz /app/utils.py", line 35, in wrapped_view
+    return view_func(request, *args, **kwargs)
+  File "/Users/petergangmei/Developer/Projects/django/quiz /app/views.py", line 59, in quiz_question
+    user_quiz = get_object_or_404(UserQuiz, token=token)
+  File "/Users/petergangmei/Developer/Projects/django/quiz /venv/lib/python3.13/site-packages/django/shortcuts.py", line 86, in get_object_or_404
+    return queryset.get(*args, **kwargs)
+           ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/Users/petergangmei/Developer/Projects/django/quiz /venv/lib/python3.13/site-packages/django/db/models/query.py", line 635, in get
+    clone = self._chain() if self.query.combinator else self.filter(*args, **kwargs)
+                                                        ~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/Users/petergangmei/Developer/Projects/django/quiz /venv/lib/python3.13/site-packages/django/db/models/query.py", line 1476, in filter
+    return self._filter_or_exclude(False, args, kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/petergangmei/Developer/Projects/django/quiz /venv/lib/python3.13/site-packages/django/db/models/query.py", line 1494, in _filter_or_exclude
+    clone._filter_or_exclude_inplace(negate, args, kwargs)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/petergangmei/Developer/Projects/django/quiz /venv/lib/python3.13/site-packages/django/db/models/query.py", line 1501, in _filter_or_exclude_inplace
+    self._query.add_q(Q(*args, **kwargs))
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "/Users/petergangmei/Developer/Projects/django/quiz /venv/lib/python3.13/site-packages/django/db/models/sql/query.py", line 1609, in add_q
+    clause, _ = self._add_q(q_object, self.used_aliases)
+                ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/petergangmei/Developer/Projects/django/quiz /venv/lib/python3.13/site-packages/django/db/models/sql/query.py", line 1641, in _add_q
+    child_clause, needed_inner = self.build_filter(
+                                 ~~~~~~~~~~~~~~~~~^
+        child,
+        ^^^^^^
+    ...<7 lines>...
+        update_join_types=update_join_types,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/petergangmei/Developer/Projects/django/quiz /venv/lib/python3.13/site-packages/django/db/models/sql/query.py", line 1491, in build_filter
+    lookups, parts, reffed_expression = self.solve_lookup_type(arg, summarize)
+                                        ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "/Users/petergangmei/Developer/Projects/django/quiz /venv/lib/python3.13/site-packages/django/db/models/sql/query.py", line 1303, in solve_lookup_type
+    _, field, _, lookup_parts = self.names_to_path(lookup_splitted, self.get_meta())
+                                ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/petergangmei/Developer/Projects/django/quiz /venv/lib/python3.13/site-packages/django/db/models/sql/query.py", line 1768, in names_to_path
+    raise FieldError(
+    ...<2 lines>...
+    )
+django.core.exceptions.FieldError: Cannot resolve keyword 'token' into field. Choices are: access_token, created_at, current_question, expires_at, id, ip_address, is_completed, quiz, quiz_id, reflection_1, reflection_2, reflection_3, responses, result_data, user_name
+ERROR 2025-03-28 11:07:59,829 basehttp 53889 6122516480 "GET /quiz/question/c459e810-69f2-46e4-8450-12c20fff1452/ HTTP/1.1" 500 127195
+ERROR 2025-03-28 11:08:20,070 log 53889 6122516480 Internal Server Error: /quiz/question/7af34382-ea57-4855-8605-fc91899ce011/
+Traceback (most recent call last):
+  File "/Users/petergangmei/Developer/Projects/django/quiz /venv/lib/python3.13/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/Users/petergangmei/Developer/Projects/django/quiz /venv/lib/python3.13/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/Users/petergangmei/Developer/Projects/django/quiz /app/utils.py", line 35, in wrapped_view
+    return view_func(request, *args, **kwargs)
+  File "/Users/petergangmei/Developer/Projects/django/quiz /app/views.py", line 59, in quiz_question
+    user_quiz = get_object_or_404(UserQuiz, token=token)
+  File "/Users/petergangmei/Developer/Projects/django/quiz /venv/lib/python3.13/site-packages/django/shortcuts.py", line 86, in get_object_or_404
+    return queryset.get(*args, **kwargs)
+           ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/Users/petergangmei/Developer/Projects/django/quiz /venv/lib/python3.13/site-packages/django/db/models/query.py", line 635, in get
+    clone = self._chain() if self.query.combinator else self.filter(*args, **kwargs)
+                                                        ~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/Users/petergangmei/Developer/Projects/django/quiz /venv/lib/python3.13/site-packages/django/db/models/query.py", line 1476, in filter
+    return self._filter_or_exclude(False, args, kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/petergangmei/Developer/Projects/django/quiz /venv/lib/python3.13/site-packages/django/db/models/query.py", line 1494, in _filter_or_exclude
+    clone._filter_or_exclude_inplace(negate, args, kwargs)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/petergangmei/Developer/Projects/django/quiz /venv/lib/python3.13/site-packages/django/db/models/query.py", line 1501, in _filter_or_exclude_inplace
+    self._query.add_q(Q(*args, **kwargs))
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "/Users/petergangmei/Developer/Projects/django/quiz /venv/lib/python3.13/site-packages/django/db/models/sql/query.py", line 1609, in add_q
+    clause, _ = self._add_q(q_object, self.used_aliases)
+                ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/petergangmei/Developer/Projects/django/quiz /venv/lib/python3.13/site-packages/django/db/models/sql/query.py", line 1641, in _add_q
+    child_clause, needed_inner = self.build_filter(
+                                 ~~~~~~~~~~~~~~~~~^
+        child,
+        ^^^^^^
+    ...<7 lines>...
+        update_join_types=update_join_types,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/petergangmei/Developer/Projects/django/quiz /venv/lib/python3.13/site-packages/django/db/models/sql/query.py", line 1491, in build_filter
+    lookups, parts, reffed_expression = self.solve_lookup_type(arg, summarize)
+                                        ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "/Users/petergangmei/Developer/Projects/django/quiz /venv/lib/python3.13/site-packages/django/db/models/sql/query.py", line 1303, in solve_lookup_type
+    _, field, _, lookup_parts = self.names_to_path(lookup_splitted, self.get_meta())
+                                ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/petergangmei/Developer/Projects/django/quiz /venv/lib/python3.13/site-packages/django/db/models/sql/query.py", line 1768, in names_to_path
+    raise FieldError(
+    ...<2 lines>...
+    )
+django.core.exceptions.FieldError: Cannot resolve keyword 'token' into field. Choices are: access_token, created_at, current_question, expires_at, id, ip_address, is_completed, quiz, quiz_id, reflection_1, reflection_2, reflection_3, responses, result_data, user_name
+ERROR 2025-03-28 11:08:20,073 basehttp 53889 6122516480 "GET /quiz/question/7af34382-ea57-4855-8605-fc91899ce011/ HTTP/1.1" 500 126859
+ERROR 2025-03-28 11:08:20,678 log 53889 6139342848 Internal Server Error: /
+Traceback (most recent call last):
+  File "/Users/petergangmei/Developer/Projects/django/quiz /venv/lib/python3.13/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/Users/petergangmei/Developer/Projects/django/quiz /venv/lib/python3.13/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/Users/petergangmei/Developer/Projects/django/quiz /app/views.py", line 15, in home
+    return render(request, 'home.html', {'quizzes': quizzes})
+  File "/Users/petergangmei/Developer/Projects/django/quiz /venv/lib/python3.13/site-packages/django/shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "/Users/petergangmei/Developer/Projects/django/quiz /venv/lib/python3.13/site-packages/django/template/loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "/Users/petergangmei/Developer/Projects/django/quiz /venv/lib/python3.13/site-packages/django/template/backends/django.py", line 107, in render
+    return self.template.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/Users/petergangmei/Developer/Projects/django/quiz /venv/lib/python3.13/site-packages/django/template/base.py", line 171, in render
+    return self._render(context)
+           ~~~~~~~~~~~~^^^^^^^^^
+  File "/Users/petergangmei/Developer/Projects/django/quiz /venv/lib/python3.13/site-packages/django/template/base.py", line 163, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/Users/petergangmei/Developer/Projects/django/quiz /venv/lib/python3.13/site-packages/django/template/base.py", line 1008, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/Users/petergangmei/Developer/Projects/django/quiz /venv/lib/python3.13/site-packages/django/template/base.py", line 969, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "/Users/petergangmei/Developer/Projects/django/quiz /venv/lib/python3.13/site-packages/django/template/loader_tags.py", line 159, in render
+    return compiled_parent._render(context)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/Users/petergangmei/Developer/Projects/django/quiz /venv/lib/python3.13/site-packages/django/template/base.py", line 163, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/Users/petergangmei/Developer/Projects/django/quiz /venv/lib/python3.13/site-packages/django/template/base.py", line 1008, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/Users/petergangmei/Developer/Projects/django/quiz /venv/lib/python3.13/site-packages/django/template/base.py", line 969, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "/Users/petergangmei/Developer/Projects/django/quiz /venv/lib/python3.13/site-packages/django/template/loader_tags.py", line 210, in render
+    return template.render(context)
+           ~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/Users/petergangmei/Developer/Projects/django/quiz /venv/lib/python3.13/site-packages/django/template/base.py", line 173, in render
+    return self._render(context)
+           ~~~~~~~~~~~~^^^^^^^^^
+  File "/Users/petergangmei/Developer/Projects/django/quiz /venv/lib/python3.13/site-packages/django/template/base.py", line 163, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/Users/petergangmei/Developer/Projects/django/quiz /venv/lib/python3.13/site-packages/django/template/base.py", line 1008, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/Users/petergangmei/Developer/Projects/django/quiz /venv/lib/python3.13/site-packages/django/template/base.py", line 969, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "/Users/petergangmei/Developer/Projects/django/quiz /venv/lib/python3.13/site-packages/django/template/defaulttags.py", line 480, in render
+    url = reverse(view_name, args=args, kwargs=kwargs, current_app=current_app)
+  File "/Users/petergangmei/Developer/Projects/django/quiz /venv/lib/python3.13/site-packages/django/urls/base.py", line 88, in reverse
+    return resolver._reverse_with_prefix(view, prefix, *args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/petergangmei/Developer/Projects/django/quiz /venv/lib/python3.13/site-packages/django/urls/resolvers.py", line 831, in _reverse_with_prefix
+    raise NoReverseMatch(msg)
+django.urls.exceptions.NoReverseMatch: Reverse for 'home' not found. 'home' is not a valid view function or pattern name.
+ERROR 2025-03-28 11:08:20,682 basehttp 53889 6139342848 "GET / HTTP/1.1" 500 159934
+ERROR 2025-03-28 11:09:52,979 log 53889 6156169216 Internal Server Error: /quiz/1/
+Traceback (most recent call last):
+  File "/Users/petergangmei/Developer/Projects/django/quiz /venv/lib/python3.13/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/Users/petergangmei/Developer/Projects/django/quiz /venv/lib/python3.13/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/Users/petergangmei/Developer/Projects/django/quiz /app/views.py", line 367, in quiz_detail
+    return render(request, 'app/quiz_detail.html', {'quiz': quiz})
+  File "/Users/petergangmei/Developer/Projects/django/quiz /venv/lib/python3.13/site-packages/django/shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "/Users/petergangmei/Developer/Projects/django/quiz /venv/lib/python3.13/site-packages/django/template/loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "/Users/petergangmei/Developer/Projects/django/quiz /venv/lib/python3.13/site-packages/django/template/backends/django.py", line 107, in render
+    return self.template.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/Users/petergangmei/Developer/Projects/django/quiz /venv/lib/python3.13/site-packages/django/template/base.py", line 171, in render
+    return self._render(context)
+           ~~~~~~~~~~~~^^^^^^^^^
+  File "/Users/petergangmei/Developer/Projects/django/quiz /venv/lib/python3.13/site-packages/django/template/base.py", line 163, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/Users/petergangmei/Developer/Projects/django/quiz /venv/lib/python3.13/site-packages/django/template/base.py", line 1008, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/Users/petergangmei/Developer/Projects/django/quiz /venv/lib/python3.13/site-packages/django/template/base.py", line 969, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "/Users/petergangmei/Developer/Projects/django/quiz /venv/lib/python3.13/site-packages/django/template/loader_tags.py", line 159, in render
+    return compiled_parent._render(context)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/Users/petergangmei/Developer/Projects/django/quiz /venv/lib/python3.13/site-packages/django/template/base.py", line 163, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/Users/petergangmei/Developer/Projects/django/quiz /venv/lib/python3.13/site-packages/django/template/base.py", line 1008, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/Users/petergangmei/Developer/Projects/django/quiz /venv/lib/python3.13/site-packages/django/template/base.py", line 969, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "/Users/petergangmei/Developer/Projects/django/quiz /venv/lib/python3.13/site-packages/django/template/loader_tags.py", line 65, in render
+    result = block.nodelist.render(context)
+  File "/Users/petergangmei/Developer/Projects/django/quiz /venv/lib/python3.13/site-packages/django/template/base.py", line 1008, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/Users/petergangmei/Developer/Projects/django/quiz /venv/lib/python3.13/site-packages/django/template/base.py", line 969, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "/Users/petergangmei/Developer/Projects/django/quiz /venv/lib/python3.13/site-packages/django/template/defaulttags.py", line 327, in render
+    return nodelist.render(context)
+           ~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/Users/petergangmei/Developer/Projects/django/quiz /venv/lib/python3.13/site-packages/django/template/base.py", line 1008, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/Users/petergangmei/Developer/Projects/django/quiz /venv/lib/python3.13/site-packages/django/template/base.py", line 969, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "/Users/petergangmei/Developer/Projects/django/quiz /venv/lib/python3.13/site-packages/django/template/defaulttags.py", line 480, in render
+    url = reverse(view_name, args=args, kwargs=kwargs, current_app=current_app)
+  File "/Users/petergangmei/Developer/Projects/django/quiz /venv/lib/python3.13/site-packages/django/urls/base.py", line 88, in reverse
+    return resolver._reverse_with_prefix(view, prefix, *args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/petergangmei/Developer/Projects/django/quiz /venv/lib/python3.13/site-packages/django/urls/resolvers.py", line 831, in _reverse_with_prefix
+    raise NoReverseMatch(msg)
+django.urls.exceptions.NoReverseMatch: Reverse for 'quiz-start' not found. 'quiz-start' is not a valid view function or pattern name.
+ERROR 2025-03-28 11:09:52,983 basehttp 53889 6156169216 "GET /quiz/1/ HTTP/1.1" 500 168696
+ERROR 2025-03-28 11:10:02,166 log 53889 6122516480 Internal Server Error: /quiz/1/
+Traceback (most recent call last):
+  File "/Users/petergangmei/Developer/Projects/django/quiz /venv/lib/python3.13/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/Users/petergangmei/Developer/Projects/django/quiz /venv/lib/python3.13/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/Users/petergangmei/Developer/Projects/django/quiz /app/views.py", line 367, in quiz_detail
+    return render(request, 'app/quiz_detail.html', {'quiz': quiz})
+  File "/Users/petergangmei/Developer/Projects/django/quiz /venv/lib/python3.13/site-packages/django/shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "/Users/petergangmei/Developer/Projects/django/quiz /venv/lib/python3.13/site-packages/django/template/loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "/Users/petergangmei/Developer/Projects/django/quiz /venv/lib/python3.13/site-packages/django/template/backends/django.py", line 107, in render
+    return self.template.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/Users/petergangmei/Developer/Projects/django/quiz /venv/lib/python3.13/site-packages/django/template/base.py", line 171, in render
+    return self._render(context)
+           ~~~~~~~~~~~~^^^^^^^^^
+  File "/Users/petergangmei/Developer/Projects/django/quiz /venv/lib/python3.13/site-packages/django/template/base.py", line 163, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/Users/petergangmei/Developer/Projects/django/quiz /venv/lib/python3.13/site-packages/django/template/base.py", line 1008, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/Users/petergangmei/Developer/Projects/django/quiz /venv/lib/python3.13/site-packages/django/template/base.py", line 969, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "/Users/petergangmei/Developer/Projects/django/quiz /venv/lib/python3.13/site-packages/django/template/loader_tags.py", line 159, in render
+    return compiled_parent._render(context)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/Users/petergangmei/Developer/Projects/django/quiz /venv/lib/python3.13/site-packages/django/template/base.py", line 163, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/Users/petergangmei/Developer/Projects/django/quiz /venv/lib/python3.13/site-packages/django/template/base.py", line 1008, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/Users/petergangmei/Developer/Projects/django/quiz /venv/lib/python3.13/site-packages/django/template/base.py", line 969, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "/Users/petergangmei/Developer/Projects/django/quiz /venv/lib/python3.13/site-packages/django/template/loader_tags.py", line 65, in render
+    result = block.nodelist.render(context)
+  File "/Users/petergangmei/Developer/Projects/django/quiz /venv/lib/python3.13/site-packages/django/template/base.py", line 1008, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/Users/petergangmei/Developer/Projects/django/quiz /venv/lib/python3.13/site-packages/django/template/base.py", line 969, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "/Users/petergangmei/Developer/Projects/django/quiz /venv/lib/python3.13/site-packages/django/template/defaulttags.py", line 327, in render
+    return nodelist.render(context)
+           ~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/Users/petergangmei/Developer/Projects/django/quiz /venv/lib/python3.13/site-packages/django/template/base.py", line 1008, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/Users/petergangmei/Developer/Projects/django/quiz /venv/lib/python3.13/site-packages/django/template/base.py", line 969, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "/Users/petergangmei/Developer/Projects/django/quiz /venv/lib/python3.13/site-packages/django/template/defaulttags.py", line 480, in render
+    url = reverse(view_name, args=args, kwargs=kwargs, current_app=current_app)
+  File "/Users/petergangmei/Developer/Projects/django/quiz /venv/lib/python3.13/site-packages/django/urls/base.py", line 88, in reverse
+    return resolver._reverse_with_prefix(view, prefix, *args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/petergangmei/Developer/Projects/django/quiz /venv/lib/python3.13/site-packages/django/urls/resolvers.py", line 831, in _reverse_with_prefix
+    raise NoReverseMatch(msg)
+django.urls.exceptions.NoReverseMatch: Reverse for 'quiz-start' not found. 'quiz-start' is not a valid view function or pattern name.
+ERROR 2025-03-28 11:10:02,168 basehttp 53889 6122516480 "GET /quiz/1/ HTTP/1.1" 500 168833
+ERROR 2025-03-28 11:10:10,966 log 53889 6122516480 Internal Server Error: /quiz/1/
+Traceback (most recent call last):
+  File "/Users/petergangmei/Developer/Projects/django/quiz /venv/lib/python3.13/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/Users/petergangmei/Developer/Projects/django/quiz /venv/lib/python3.13/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/Users/petergangmei/Developer/Projects/django/quiz /app/views.py", line 367, in quiz_detail
+    return render(request, 'app/quiz_detail.html', {'quiz': quiz})
+  File "/Users/petergangmei/Developer/Projects/django/quiz /venv/lib/python3.13/site-packages/django/shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "/Users/petergangmei/Developer/Projects/django/quiz /venv/lib/python3.13/site-packages/django/template/loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "/Users/petergangmei/Developer/Projects/django/quiz /venv/lib/python3.13/site-packages/django/template/backends/django.py", line 107, in render
+    return self.template.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/Users/petergangmei/Developer/Projects/django/quiz /venv/lib/python3.13/site-packages/django/template/base.py", line 171, in render
+    return self._render(context)
+           ~~~~~~~~~~~~^^^^^^^^^
+  File "/Users/petergangmei/Developer/Projects/django/quiz /venv/lib/python3.13/site-packages/django/template/base.py", line 163, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/Users/petergangmei/Developer/Projects/django/quiz /venv/lib/python3.13/site-packages/django/template/base.py", line 1008, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/Users/petergangmei/Developer/Projects/django/quiz /venv/lib/python3.13/site-packages/django/template/base.py", line 969, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "/Users/petergangmei/Developer/Projects/django/quiz /venv/lib/python3.13/site-packages/django/template/loader_tags.py", line 159, in render
+    return compiled_parent._render(context)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/Users/petergangmei/Developer/Projects/django/quiz /venv/lib/python3.13/site-packages/django/template/base.py", line 163, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/Users/petergangmei/Developer/Projects/django/quiz /venv/lib/python3.13/site-packages/django/template/base.py", line 1008, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/Users/petergangmei/Developer/Projects/django/quiz /venv/lib/python3.13/site-packages/django/template/base.py", line 969, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "/Users/petergangmei/Developer/Projects/django/quiz /venv/lib/python3.13/site-packages/django/template/loader_tags.py", line 65, in render
+    result = block.nodelist.render(context)
+  File "/Users/petergangmei/Developer/Projects/django/quiz /venv/lib/python3.13/site-packages/django/template/base.py", line 1008, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/Users/petergangmei/Developer/Projects/django/quiz /venv/lib/python3.13/site-packages/django/template/base.py", line 969, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "/Users/petergangmei/Developer/Projects/django/quiz /venv/lib/python3.13/site-packages/django/template/defaulttags.py", line 327, in render
+    return nodelist.render(context)
+           ~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/Users/petergangmei/Developer/Projects/django/quiz /venv/lib/python3.13/site-packages/django/template/base.py", line 1008, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/Users/petergangmei/Developer/Projects/django/quiz /venv/lib/python3.13/site-packages/django/template/base.py", line 969, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "/Users/petergangmei/Developer/Projects/django/quiz /venv/lib/python3.13/site-packages/django/template/defaulttags.py", line 480, in render
+    url = reverse(view_name, args=args, kwargs=kwargs, current_app=current_app)
+  File "/Users/petergangmei/Developer/Projects/django/quiz /venv/lib/python3.13/site-packages/django/urls/base.py", line 88, in reverse
+    return resolver._reverse_with_prefix(view, prefix, *args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/petergangmei/Developer/Projects/django/quiz /venv/lib/python3.13/site-packages/django/urls/resolvers.py", line 831, in _reverse_with_prefix
+    raise NoReverseMatch(msg)
+django.urls.exceptions.NoReverseMatch: Reverse for 'quiz-start' not found. 'quiz-start' is not a valid view function or pattern name.
+ERROR 2025-03-28 11:10:10,969 basehttp 53889 6122516480 "GET /quiz/1/ HTTP/1.1" 500 168833
+ERROR 2025-03-28 11:10:55,523 log 55917 6158381056 Internal Server Error: /quiz/question/60d2b8ed-f58b-4f38-93c3-7071f37c2cf2/
+Traceback (most recent call last):
+  File "/Users/petergangmei/Developer/Projects/django/quiz /venv/lib/python3.13/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/Users/petergangmei/Developer/Projects/django/quiz /venv/lib/python3.13/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/Users/petergangmei/Developer/Projects/django/quiz /app/utils.py", line 35, in wrapped_view
+    return view_func(request, *args, **kwargs)
+  File "/Users/petergangmei/Developer/Projects/django/quiz /app/views.py", line 59, in quiz_question
+    user_quiz = get_object_or_404(UserQuiz, token=token)
+  File "/Users/petergangmei/Developer/Projects/django/quiz /venv/lib/python3.13/site-packages/django/shortcuts.py", line 86, in get_object_or_404
+    return queryset.get(*args, **kwargs)
+           ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/Users/petergangmei/Developer/Projects/django/quiz /venv/lib/python3.13/site-packages/django/db/models/query.py", line 635, in get
+    clone = self._chain() if self.query.combinator else self.filter(*args, **kwargs)
+                                                        ~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/Users/petergangmei/Developer/Projects/django/quiz /venv/lib/python3.13/site-packages/django/db/models/query.py", line 1476, in filter
+    return self._filter_or_exclude(False, args, kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/petergangmei/Developer/Projects/django/quiz /venv/lib/python3.13/site-packages/django/db/models/query.py", line 1494, in _filter_or_exclude
+    clone._filter_or_exclude_inplace(negate, args, kwargs)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/petergangmei/Developer/Projects/django/quiz /venv/lib/python3.13/site-packages/django/db/models/query.py", line 1501, in _filter_or_exclude_inplace
+    self._query.add_q(Q(*args, **kwargs))
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "/Users/petergangmei/Developer/Projects/django/quiz /venv/lib/python3.13/site-packages/django/db/models/sql/query.py", line 1609, in add_q
+    clause, _ = self._add_q(q_object, self.used_aliases)
+                ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/petergangmei/Developer/Projects/django/quiz /venv/lib/python3.13/site-packages/django/db/models/sql/query.py", line 1641, in _add_q
+    child_clause, needed_inner = self.build_filter(
+                                 ~~~~~~~~~~~~~~~~~^
+        child,
+        ^^^^^^
+    ...<7 lines>...
+        update_join_types=update_join_types,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/petergangmei/Developer/Projects/django/quiz /venv/lib/python3.13/site-packages/django/db/models/sql/query.py", line 1491, in build_filter
+    lookups, parts, reffed_expression = self.solve_lookup_type(arg, summarize)
+                                        ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "/Users/petergangmei/Developer/Projects/django/quiz /venv/lib/python3.13/site-packages/django/db/models/sql/query.py", line 1303, in solve_lookup_type
+    _, field, _, lookup_parts = self.names_to_path(lookup_splitted, self.get_meta())
+                                ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/petergangmei/Developer/Projects/django/quiz /venv/lib/python3.13/site-packages/django/db/models/sql/query.py", line 1768, in names_to_path
+    raise FieldError(
+    ...<2 lines>...
+    )
+django.core.exceptions.FieldError: Cannot resolve keyword 'token' into field. Choices are: access_token, created_at, current_question, expires_at, id, ip_address, is_completed, quiz, quiz_id, reflection_1, reflection_2, reflection_3, responses, result_data, user_name
+ERROR 2025-03-28 11:10:55,531 basehttp 55917 6158381056 "GET /quiz/question/60d2b8ed-f58b-4f38-93c3-7071f37c2cf2/ HTTP/1.1" 500 127651

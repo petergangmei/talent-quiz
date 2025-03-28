@@ -24,7 +24,7 @@
                                     <p class="card-text">{{ quiz.description|truncatechars:100 }}</p>
                                 </div>
                                 <div class="card-footer bg-transparent">
-                                    <a href="{% url 'quiz-detail' quiz.id %}" class="btn btn-primary">View Quiz</a>
+                                    <a href="{% url 'app:quiz-detail' quiz.id %}" class="btn btn-primary">View Quiz</a>
                                 </div>
                             </div>
                         </div>
