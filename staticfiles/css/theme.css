@@ -1,0 +1,256 @@
+/* 
+ * Custom Theme Colors
+ * Primary Pink: #E47C8E
+ * Dark Brown: #2F2420  
+ * Light Pink: #F2A2B0
+ * Off White: #F9F9F9
+ */
+
+/* Ensure dark theme is enforced by default */
+html, body {
+  background-color: #2F2420;
+  color: #F9F9F9;
+}
+
+:root {
+  /* Primary Colors */
+  --primary: #E47C8E;    /* Pink - main brand color */
+  --primary-light: #F2A2B0; /* Lighter shade of primary */
+  --primary-dark: #C06070; /* Darker shade of primary */
+  
+  /* Background Colors */
+  --bg-dark: #2F2420;    /* Dark Brown - main background */
+  --bg-darker: #231C18;  /* Slightly darker background */
+  --bg-card: #3A2E29;    /* Slightly lighter brown for cards */
+  
+  /* Accent Colors */
+  --accent: #FAE8E0;     /* Off-white accent */
+  --accent-dark: #E6D4CC; /* Slightly darker accent */
+  
+  /* Text Colors */
+  --text-dark: #333333;  /* Dark text on light backgrounds */
+  --text-light: #F9F9F9; /* Light text on dark backgrounds */
+  --text-muted: #A7978F; /* Muted text color */
+  
+  /* Alert Colors */
+  --success-bg: rgba(76, 175, 80, 0.2);
+  --success-border: rgba(76, 175, 80, 0.3);
+  --success-text: #c3e6c4;
+  
+  --info-bg: rgba(91, 192, 222, 0.2);
+  --info-border: rgba(91, 192, 222, 0.3);
+  --info-text: #d1ecf6;
+  
+  --warning-bg: rgba(240, 173, 78, 0.2);
+  --warning-border: rgba(240, 173, 78, 0.3);
+  --warning-text: #f5e2c6;
+  
+  --danger-bg: rgba(217, 83, 79, 0.2);
+  --danger-border: rgba(217, 83, 79, 0.3);
+  --danger-text: #f8d7da;
+  
+  /* Bootstrap colors (overriding with theme colors) */
+  --bs-primary: var(--primary);
+  --bs-secondary: var(--bg-card);
+  --bs-success: #4CAF50;
+  --bs-info: #5bc0de;
+  --bs-warning: #f0ad4e;
+  --bs-danger: #d9534f;
+  --bs-light: var(--accent);
+  --bs-dark: var(--bg-dark);
+}
+
+/* Background color helper classes */
+.bg-primary { background-color: var(--primary) !important; }
+.bg-secondary { background-color: var(--bg-card) !important; }
+.bg-dark { background-color: var(--bg-dark) !important; }
+.bg-darker { background-color: var(--bg-darker) !important; }
+.bg-card { background-color: var(--bg-card) !important; }
+.bg-accent { background-color: var(--accent) !important; }
+
+/* Text color helper classes */
+.text-primary { color: var(--primary) !important; }
+.text-light { color: var(--text-light) !important; }
+.text-muted { color: var(--text-muted) !important; }
+
+/* Alert styling */
+.alert-success {
+  background-color: var(--success-bg);
+  border-color: var(--success-border);
+  color: var(--success-text);
+}
+
+.alert-info {
+  background-color: var(--info-bg);
+  border-color: var(--info-border);
+  color: var(--info-text);
+}
+
+.alert-warning {
+  background-color: var(--warning-bg);
+  border-color: var(--warning-border);
+  color: var(--warning-text);
+}
+
+.alert-danger {
+  background-color: var(--danger-bg);
+  border-color: var(--danger-border);
+  color: var(--danger-text);
+}
+
+/* Button styling */
+.btn-primary {
+  background-color: var(--primary);
+  border-color: var(--primary-dark);
+  color: var(--text-light);
+}
+
+.btn-primary:hover {
+  background-color: var(--primary-dark);
+  border-color: var(--primary-dark);
+  color: var(--text-light);
+}
+
+.btn-outline-primary {
+  color: var(--primary);
+  border-color: var(--primary);
+}
+
+.btn-outline-primary:hover {
+  background-color: var(--primary);
+  border-color: var(--primary);
+  color: var(--text-light);
+}
+
+/* Form controls */
+.form-control {
+  background-color: var(--bg-card);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: var(--text-light);
+}
+
+.form-control:focus {
+  background-color: var(--bg-card);
+  border-color: var(--primary);
+  color: var(--text-light);
+  box-shadow: 0 0 0 0.2rem rgba(228, 124, 142, 0.25);
+}
+
+/* Card styling */
+.card {
+  background-color: var(--bg-card);
+  border: none;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.card-header {
+  background-color: var(--bg-darker) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  color: var(--text-light);
+}
+
+.card-body {
+  color: var(--text-light);
+}
+
+.card-footer {
+  background-color: var(--bg-darker);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Table styling */
+.table {
+  color: var(--text-light);
+}
+
+.table td, .table th {
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+/* Modal styling */
+.modal-content {
+  background-color: var(--bg-card);
+  color: var(--text-light);
+  border: none;
+}
+
+.modal-header {
+  background-color: var(--bg-darker);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.modal-footer {
+  background-color: var(--bg-darker);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Progress bar */
+.progress {
+  background-color: var(--bg-darker);
+}
+
+.progress-bar {
+  background-color: var(--primary);
+  color: var(--text-light);
+}
+
+/* Essential overrides for quiz functionality */
+
+/* Custom radio button essential styling */
+.custom-radio-container {
+    display: block;
+    position: relative;
+    width: 100%;
+    cursor: pointer;
+}
+
+.custom-radio-input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+}
+
+.custom-radio-circle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 50px;
+    width: 50px;
+    border-radius: 50%;
+    margin: 0 auto;
+    transition: all 0.2s ease;
+}
+
+/* Timer essential styling */
+.countdown-text {
+    animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1; }
+}
+
+/* Rating scale essential styling */
+.rating-column {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.rating-label {
+    font-size: 0.8rem;
+    text-align: center;
+    margin-bottom: 10px;
+    min-height: 40px;
+    display: flex;
+    align-items: center;
+} 
