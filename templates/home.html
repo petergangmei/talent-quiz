@@ -1,30 +1,33 @@
 {% extends 'base.html' %}
-{% block title %}Quiz App - Home{% endblock %}
+{% block title %}Talent Quiz - Home{% endblock %}
 
-{% block og_title %}Quiz App - Test your knowledge{% endblock %}
-{% block og_description %}Take interactive quizzes and discover your results{% endblock %}
+{% block og_title %}Talent Quiz - Discover your talents{% endblock %}
+{% block og_description %}Take interactive talent assessment quizzes and discover your unique abilities{% endblock %}
 
 {% block content %}
 <div class="container">
-    <div class="jumbotron text-center">
-        <h1 class="display-4">Welcome to Quiz App</h1>
-        <p class="lead">Take interactive quizzes and discover your results!</p>
+    <div class="jumbotron text-center bg-primary text-white rounded shadow-lg p-5 mb-4">
+        <h1 class="display-4">Welcome to Talent Quiz</h1>
+        <p class="lead">Discover your unique talents through our interactive assessments!</p>
+        <hr class="my-4 bg-light">
+        <p>Start your journey of self-discovery today.</p>
+        <a class="btn btn-light btn-lg" href="#available-quizzes" role="button">Explore Quizzes</a>
     </div>
 
-    <div class="row mt-4">
+    <div class="row mt-5" id="available-quizzes">
         <div class="col-md-12">
-            <h2>Available Quizzes</h2>
+            <h2 class="text-center mb-4">Available Quizzes</h2>
             {% if quizzes %}
                 <div class="row">
                     {% for quiz in quizzes %}
                         <div class="col-md-4 mb-4">
-                            <div class="card h-100">
+                            <div class="card h-100 hover-shadow transition-300">
                                 <div class="card-body">
                                     <h5 class="card-title">{{ quiz.title }}</h5>
                                     <p class="card-text">{{ quiz.description|truncatechars:100 }}</p>
                                 </div>
                                 <div class="card-footer bg-transparent">
-                                    <a href="{% url 'app:quiz-detail' quiz.id %}" class="btn btn-primary">View Quiz</a>
+                                    <a href="{% url 'app:quiz-detail' quiz.id %}" class="btn btn-primary btn-block">View Quiz</a>
                                 </div>
                             </div>
                         </div>
@@ -37,5 +40,30 @@
             {% endif %}
         </div>
     </div>
+    
+    <div class="row mt-5 mb-5">
+        <div class="col-md-12">
+            <div class="card bg-light">
+                <div class="card-body text-center">
+                    <h3>Have questions or suggestions?</h3>
+                    <p class="lead">Contact us at: <a href="mailto:talent-quiz@rcfd.in">talent-quiz@rcfd.in</a></p>
+                    <div class="mt-3">
+                        <a href="#" class="btn btn-outline-primary mx-2"><i class="fas fa-envelope"></i> Contact Us</a>
+                        <a href="#" class="btn btn-outline-primary mx-2"><i class="fas fa-info-circle"></i> About</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+
+<style>
+    .hover-shadow:hover {
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+        transform: translateY(-5px);
+    }
+    .transition-300 {
+        transition: all 0.3s ease;
+    }
+</style>
 {% endblock content %}
