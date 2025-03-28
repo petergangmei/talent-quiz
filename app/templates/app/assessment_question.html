@@ -37,7 +37,6 @@
                     
                     <!-- Timer Settings -->
                     <div class="p-4 bg-dark border rounded mb-4">
-                        <h5 class="mb-4">Set Reflection Timer:</h5>
                         <div class="d-flex flex-wrap justify-content-center gap-2">
                             <button class="btn btn-outline-light rounded-pill px-4 timer-option" data-seconds="0">Immediate</button>
                             <button class="btn btn-outline-light rounded-pill px-4 timer-option" data-seconds="3">3s</button>
@@ -376,10 +375,9 @@
         
         // Use sendBeacon for reliable background submission during navigation
         function sendDataInBackground(submissionData) {
-            // Include the CSRF token in the data itself instead of URL parameters
+            // Simplify the payload since we're using csrf_exempt
             const payload = {
                 ...submissionData.data,
-                csrfmiddlewaretoken: csrfToken,
                 submission_id: submissionData.id,
                 is_beacon: true
             };
@@ -405,9 +403,8 @@
                     method: 'POST',
                     body: JSON.stringify(payload),
                     headers: {
-                        'X-CSRFToken': csrfToken,
-                        'X-Requested-With': 'XMLHttpRequest',
-                        'Content-Type': 'application/json'
+                        'Content-Type': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest'
                     },
                     keepalive: true // Important for navigation scenarios
                 });

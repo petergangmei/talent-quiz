@@ -8,8 +8,8 @@ from .models import UserResponse
 
 def conditional_csrf_exempt(view_func):
     """
-    Decorator that makes a view CSRF exempt when accessed from trusted domains.
-    This is useful for handling specific edge cases where CSRF validation might fail.
+    Decorator that makes a view CSRF exempt when accessed from trusted domains
+    or when it's a beacon request with is_beacon=true in the JSON body.
     
     Usage:
         @conditional_csrf_exempt
@@ -27,8 +27,19 @@ def conditional_csrf_exempt(view_func):
         is_trusted = any(origin.startswith(trusted) for trusted in trusted_origins) or \
                     any(referer.startswith(trusted) for trusted in trusted_origins)
         
-        if is_trusted:
-            # If from a trusted origin, apply csrf_exempt
+        # Check if it's a beacon/JSON request with the is_beacon flag
+        is_beacon_request = False
+        if request.method == 'POST' and request.content_type and 'application/json' in request.content_type:
+            try:
+                import json
+                data = json.loads(request.body)
+                if data.get('is_beacon') == True:
+                    is_beacon_request = True
+            except (json.JSONDecodeError, ValueError):
+                pass
+        
+        if is_trusted or is_beacon_request:
+            # If from a trusted origin or a beacon request, apply csrf_exempt
             return csrf_exempt(view_func)(request, *args, **kwargs)
         else:
             # Otherwise, require CSRF token

@@ -3,6 +3,7 @@ from django.http import JsonResponse, Http404, HttpResponse
 from django.views.decorators.http import require_POST
 from django.urls import reverse
 from django.utils import timezone
+from django.views.decorators.csrf import csrf_exempt
 from .models import Quiz, Question, AnswerOption, QuizResult, UserQuiz, UserResponse
 from .utils import get_client_ip, conditional_csrf_exempt, calculate_assessment_results, SPIRITUAL_GIFTS_MAPPING
 import json
@@ -14,7 +15,7 @@ def home(request):
     quizzes = Quiz.objects.all()
     return render(request, 'home.html', {'quizzes': quizzes})
 
-@conditional_csrf_exempt
+@csrf_exempt
 def quiz_start(request, quiz_id):
     """
     Start a quiz and redirect to the first question.
@@ -50,13 +51,13 @@ def quiz_start(request, quiz_id):
     # Show the quiz start form (GET request)
     return render(request, 'app/quiz_start.html', {'quiz': quiz})
 
-@conditional_csrf_exempt
+@csrf_exempt
 def quiz_question(request, token):
     """
     Display a question and handle user responses.
     """
     # Get the UserQuiz instance using the token
-    user_quiz = get_object_or_404(UserQuiz, token=token)
+    user_quiz = get_object_or_404(UserQuiz, access_token=token)
     
     # Check if the quiz is expired
     if user_quiz.is_expired:
@@ -83,20 +84,17 @@ def quiz_question(request, token):
     # Handle form submission
     if request.method == 'POST':
         # Check if this is a JSON request (from sendBeacon)
-        if request.content_type and 'application/json' in request.content_type:
+        is_json_request = request.content_type and 'application/json' in request.content_type
+        
+        if is_json_request:
             try:
                 # Parse JSON data
                 import json
                 data = json.loads(request.body)
                 action = data.get('action', '')
                 option_id = data.get('option', None)
-                
-                # Add CSRF exemption for beacon requests that include the is_beacon flag
-                if not data.get('is_beacon'):
-                    return HttpResponse("CSRF verification failed", status=403)
-                
             except json.JSONDecodeError:
-                return HttpResponse("Invalid JSON", status=400)
+                return JsonResponse({"error": "Invalid JSON"}, status=400)
         else:
             # Regular form submission
             action = request.POST.get('action', '')
@@ -122,7 +120,7 @@ def quiz_question(request, token):
             else:
                 # If no option selected and not skipping, show error
                 # Only show error for regular form submissions, not beacon requests
-                if action != 'skip' and not request.content_type or 'application/json' not in request.content_type:
+                if action != 'skip' and not is_json_request:
                     return render(request, 'app/assessment_question.html', {
                         'user_quiz': user_quiz,
                         'question': question,
@@ -139,14 +137,14 @@ def quiz_question(request, token):
             calculate_results(user_quiz)
             user_quiz.save()
             
-            # For beacon requests, return a simple success response
-            if request.content_type and 'application/json' in request.content_type:
+            # For JSON requests, return a simple success response
+            if is_json_request:
                 return JsonResponse({'status': 'success', 'next': 'result'})
                 
             return redirect('app:quiz-result', token=token)
         
-        # For beacon requests, return a simple success response
-        if request.content_type and 'application/json' in request.content_type:
+        # For JSON requests, return a simple success response
+        if is_json_request:
             return JsonResponse({'status': 'success', 'next': 'question'})
             
         # Redirect to the next question
@@ -250,12 +248,13 @@ def calculate_results(user_quiz):
     
     return result_data
 
+@csrf_exempt
 def quiz_result(request, token):
     """
     Display quiz results for a user.
     """
     # Get the user quiz instance
-    user_quiz = get_object_or_404(UserQuiz, token=token)
+    user_quiz = get_object_or_404(UserQuiz, access_token=token)
     
     # If the quiz hasn't been completed, redirect to continue
     if not user_quiz.is_completed and user_quiz.current_question <= user_quiz.quiz.questions.count():
