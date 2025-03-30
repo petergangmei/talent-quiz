@@ -7,6 +7,7 @@ from django.views.decorators.csrf import csrf_exempt
 from .models import Quiz, Question, AnswerOption, QuizResult, UserQuiz, UserResponse
 from .utils import get_client_ip, conditional_csrf_exempt, calculate_assessment_results, SPIRITUAL_GIFTS_MAPPING
 import json
+import math
 
 def home(request):
     """
@@ -39,14 +40,14 @@ def quiz_start(request, quiz_id):
             is_completed=False
         )
         
-        # After creating the user_quiz, pass the token for question routing
+        # After creating the user_quiz, redirect to the batch questions view
         context = {
             'quiz': quiz,
             'token': user_quiz.token
         }
         
-        # Redirect to the first question
-        return redirect('app:quiz-question', token=user_quiz.token)
+        # Redirect to the batch questions view instead of single question view
+        return redirect('app:quiz-batch-questions', token=user_quiz.token)
     
     # Show the quiz start form (GET request)
     return render(request, 'app/quiz_start.html', {'quiz': quiz})
@@ -376,3 +377,140 @@ def assessment_continue(request, token):
     Handler for continuing from assessment instructions to the first question.
     """
     return redirect('app:quiz-question', token=token)
+
+@csrf_exempt
+def quiz_batch_questions(request, token, batch=1):
+    """
+    Display a batch of 5 questions at once and handle user responses for all of them.
+    """
+    # Get the UserQuiz instance using the token
+    user_quiz = get_object_or_404(UserQuiz, access_token=token)
+    
+    # Check if the quiz is expired
+    if user_quiz.is_expired:
+        return HttpResponse("This quiz link has expired.", status=403)
+    
+    # Prevent access if already completed
+    if user_quiz.is_completed:
+        return redirect('app:quiz-result', token=token)
+    
+    # Get total number of questions
+    total_questions = user_quiz.quiz.questions.count()
+    
+    # Calculate total number of batches (ceiling division to ensure all questions are included)
+    batch_size = 5
+    total_batches = math.ceil(total_questions / batch_size)
+    
+    # Validate batch number
+    try:
+        batch = int(batch)
+        if batch < 1 or batch > total_batches:
+            batch = 1
+    except (ValueError, TypeError):
+        batch = 1
+    
+    # Calculate start and end questions for this batch
+    start_question = ((batch - 1) * batch_size) + 1
+    end_question = min(start_question + batch_size - 1, total_questions)
+    
+    # Check if this is a valid batch (still within range)
+    if start_question > total_questions:
+        # If we're past the end, mark as completed and show results
+        user_quiz.is_completed = True
+        user_quiz.save()
+        
+        # Calculate results before showing
+        calculate_results(user_quiz)
+        
+        return redirect('app:quiz-result', token=token)
+    
+    # Get the batch of questions
+    questions = Question.objects.filter(
+        quiz=user_quiz.quiz, 
+        order__gte=start_question,
+        order__lte=end_question
+    ).order_by('order')
+    
+    # Get existing responses for these questions
+    responses = UserResponse.objects.filter(
+        user_quiz=user_quiz,
+        question__in=questions
+    )
+    
+    # Create a dictionary of question_id -> selected_option_id for easier template access
+    responses_dict = {}
+    for response in responses:
+        if response.selected_option:
+            responses_dict[response.question_id] = response.selected_option_id
+    
+    # Handle form submission
+    if request.method == 'POST':
+        action = request.POST.get('action', '')
+        
+        if action == 'skip_all':
+            # Skip all questions in this batch
+            for question in questions:
+                UserResponse.objects.update_or_create(
+                    user_quiz=user_quiz,
+                    question=question,
+                    defaults={'is_skipped': True, 'selected_option': None}
+                )
+        else:  # 'submit'
+            # Process each question's response
+            for question in questions:
+                question_key = f"question_{question.id}"
+                option_id = request.POST.get(question_key)
+                
+                if option_id:
+                    # Question was answered
+                    selected_option = get_object_or_404(AnswerOption, id=option_id, question=question)
+                    UserResponse.objects.update_or_create(
+                        user_quiz=user_quiz,
+                        question=question,
+                        defaults={'selected_option': selected_option, 'is_skipped': False}
+                    )
+                else:
+                    # Question was not answered (treat as skip)
+                    UserResponse.objects.update_or_create(
+                        user_quiz=user_quiz,
+                        question=question,
+                        defaults={'is_skipped': True, 'selected_option': None}
+                    )
+        
+        # Update current_question to point to the start of the next batch
+        user_quiz.current_question = end_question + 1
+        user_quiz.save()
+        
+        # Check if that was the last batch
+        if end_question >= total_questions:
+            user_quiz.is_completed = True
+            calculate_results(user_quiz)
+            user_quiz.save()
+            return redirect('app:quiz-result', token=token)
+        
+        # Redirect to the next batch
+        return redirect('app:quiz-batch-questions', token=token, batch=batch+1)
+    
+    # Calculate progress percentage
+    progress = int(((start_question - 1) / total_questions) * 100)
+    
+    # Check if this is the first or last batch
+    is_first_batch = (batch == 1)
+    is_last_batch = (end_question == total_questions)
+    
+    # Calculate previous batch number
+    prev_batch = batch - 1 if batch > 1 else 1
+    
+    # Render the batch questions template
+    return render(request, 'app/assessment_batch_questions.html', {
+        'user_quiz': user_quiz,
+        'questions': questions,
+        'responses_dict': responses_dict,
+        'total_questions': total_questions,
+        'progress': progress,
+        'current_batch': batch,
+        'total_batches': total_batches,
+        'is_first_batch': is_first_batch,
+        'is_last_batch': is_last_batch,
+        'prev_batch': prev_batch
+    })
