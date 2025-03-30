@@ -447,35 +447,44 @@ def quiz_batch_questions(request, token, batch=1):
     if request.method == 'POST':
         action = request.POST.get('action', '')
         
-        if action == 'skip_all':
-            # Skip all questions in this batch
-            for question in questions:
-                UserResponse.objects.update_or_create(
-                    user_quiz=user_quiz,
-                    question=question,
-                    defaults={'is_skipped': True, 'selected_option': None}
-                )
-        else:  # 'submit'
-            # Process each question's response
-            for question in questions:
-                question_key = f"question_{question.id}"
-                option_id = request.POST.get(question_key)
-                
-                if option_id:
-                    # Question was answered
-                    selected_option = get_object_or_404(AnswerOption, id=option_id, question=question)
-                    UserResponse.objects.update_or_create(
-                        user_quiz=user_quiz,
-                        question=question,
-                        defaults={'selected_option': selected_option, 'is_skipped': False}
-                    )
-                else:
-                    # Question was not answered (treat as skip)
-                    UserResponse.objects.update_or_create(
-                        user_quiz=user_quiz,
-                        question=question,
-                        defaults={'is_skipped': True, 'selected_option': None}
-                    )
+        # Check if all questions are answered
+        all_answered = True
+        for question in questions:
+            question_key = f"question_{question.id}"
+            option_id = request.POST.get(question_key)
+            if not option_id:
+                all_answered = False
+                break
+        
+        # Return error if not all questions are answered
+        if not all_answered:
+            error_message = "Please answer all questions before proceeding."
+            return render(request, 'app/assessment_batch_questions.html', {
+                'user_quiz': user_quiz,
+                'questions': questions,
+                'responses_dict': responses_dict,
+                'total_questions': total_questions,
+                'progress': progress,
+                'current_batch': batch,
+                'total_batches': total_batches,
+                'is_first_batch': is_first_batch,
+                'is_last_batch': is_last_batch,
+                'prev_batch': prev_batch,
+                'error': error_message
+            })
+        
+        # Process each question's response
+        for question in questions:
+            question_key = f"question_{question.id}"
+            option_id = request.POST.get(question_key)
+            
+            # Question was answered
+            selected_option = get_object_or_404(AnswerOption, id=option_id, question=question)
+            UserResponse.objects.update_or_create(
+                user_quiz=user_quiz,
+                question=question,
+                defaults={'selected_option': selected_option, 'is_skipped': False}
+            )
         
         # Update current_question to point to the start of the next batch
         user_quiz.current_question = end_question + 1

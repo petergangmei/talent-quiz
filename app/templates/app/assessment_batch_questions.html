@@ -265,10 +265,6 @@
                         
                         <div class="d-flex justify-content-between mt-4">
                             <div>
-                                <button type="submit" name="action" value="skip_all" class="btn btn-outline-light me-2">
-                                    Skip All
-                                </button>
-                                
                                 {% if not is_first_batch %}
                                 <a href="{% url 'app:quiz-batch-questions' token=user_quiz.token batch=prev_batch %}" class="btn btn-outline-primary">
                                     Previous Batch
@@ -276,7 +272,7 @@
                                 {% endif %}
                             </div>
                             
-                            <button type="submit" name="action" value="submit" class="btn btn-primary">
+                            <button type="submit" name="action" value="submit" class="btn btn-primary" id="nextBatchButton" disabled>
                                 {% if is_last_batch %}Finish Quiz{% else %}Next Batch{% endif %}
                             </button>
                         </div>
@@ -356,6 +352,41 @@
         const form = document.getElementById('questionsForm');
         const radioButtons = document.querySelectorAll('.custom-radio-input');
         const mobileRatingOptions = document.querySelectorAll('.rating-option');
+        const nextBatchButton = document.getElementById('nextBatchButton');
+        
+        // Group questions by name
+        const questionGroups = {};
+        radioButtons.forEach(radio => {
+            const name = radio.name;
+            if (!questionGroups[name]) {
+                questionGroups[name] = [];
+            }
+            questionGroups[name].push(radio);
+        });
+        
+        // Function to check if all questions have been answered
+        function checkAllQuestionsAnswered() {
+            const totalQuestions = Object.keys(questionGroups).length;
+            let answeredQuestions = 0;
+            
+            // Check each question group
+            for (const name in questionGroups) {
+                const radios = questionGroups[name];
+                const isAnswered = radios.some(radio => radio.checked);
+                if (isAnswered) {
+                    answeredQuestions++;
+                }
+            }
+            
+            // Enable or disable the next button
+            if (answeredQuestions === totalQuestions) {
+                nextBatchButton.removeAttribute('disabled');
+            } else {
+                nextBatchButton.setAttribute('disabled', 'disabled');
+            }
+            
+            return answeredQuestions === totalQuestions;
+        }
         
         // Radio buttons event listeners
         radioButtons.forEach(radio => {
@@ -366,6 +397,9 @@
                     
                     // Also highlight mobile option container
                     highlightMobileOption(this);
+                    
+                    // Check if all questions are answered
+                    checkAllQuestionsAnswered();
                 }
             });
         });
@@ -430,7 +464,7 @@
             });
         });
         
-        // Initialize all previously selected options
+        // Initialize all previously selected options and check if all questions are answered
         window.onload = function() {
             radioButtons.forEach(radio => {
                 if (radio.checked) {
@@ -441,6 +475,9 @@
                     highlightMobileOption(radio);
                 }
             });
+            
+            // Check if all questions are already answered (e.g., when returning to a previous batch)
+            checkAllQuestionsAnswered();
         };
     });
 </script>
